@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get this from your Firebase project settings:
     // Project settings > General > Your apps > SDK setup and configuration > Config
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY", // --- REPLACE ---
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com", // --- REPLACE ---
-        projectId: "YOUR_PROJECT_ID", // --- REPLACE ---
-        storageBucket: "YOUR_PROJECT_ID.appspot.com", // --- REPLACE ---
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // --- REPLACE ---
-        appId: "YOUR_APP_ID" // --- REPLACE ---
+      apiKey: "AIzaSyCryi1EWPZdV2mIndG12nnhJVFbvTCHIVs",
+      authDomain: "sm-engine-9c303.firebaseapp.com",
+      projectId: "sm-engine-9c303",
+      storageBucket: "sm-engine-9c303.firebasestorage.app",
+      messagingSenderId: "392617284338",
+      appId: "1:392617284338:web:f39705324fa800b02ff66b",
+      measurementId: "G-KRV4K74FFZ"
     };
-
     // --- Initialize Firebase ---
     // Check if Firebase is already initialized to avoid errors on potential fast reloads
     if (!firebase.apps.length) {
