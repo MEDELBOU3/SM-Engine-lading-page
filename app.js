@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get this from your Firebase project settings:
     // Project settings > General > Your apps > SDK setup and configuration > Config
     const firebaseConfig = {
-      apiKey: "AIzaSyCryi1EWPZdV2mIndG12nnhJVFbvTCHIVs",
-      authDomain: "sm-engine-9c303.firebaseapp.com",
-      projectId: "sm-engine-9c303",
-      storageBucket: "sm-engine-9c303.firebasestorage.app",
-      messagingSenderId: "392617284338",
-      appId: "1:392617284338:web:f39705324fa800b02ff66b",
-      measurementId: "G-KRV4K74FFZ"
-    };
+       apiKey: "AIzaSyDp2V0ULE-32AcIJ92a_e3mhMe6f6yZ_H4",
+       authDomain: "sm4movies.firebaseapp.com",
+       projectId: "sm4movies",
+       storageBucket: "sm4movies.firebasestorage.app",
+       messagingSenderId: "277353836953",
+       appId: "1:277353836953:web:85e02783526c7cb58de308",
+       measurementId: "G-690RSNJ2Q2"
+   };
     // --- Initialize Firebase ---
     // Check if Firebase is already initialized to avoid errors on potential fast reloads
     if (!firebase.apps.length) {
