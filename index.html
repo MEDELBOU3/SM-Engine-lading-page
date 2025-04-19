@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your 3D Editor - Create Amazing Worlds</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Add Google Fonts (Example: Roboto & Montserrat) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome for Icons (Optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">YourEditor</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#showcase">Showcase</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="https://your-docs-link.com" target="_blank">Docs</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button id="loginBtn" class="btn btn-secondary">Login</button>
+                <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+                <div id="userProfile" style="display: none;">
+                    <span id="userNameDisplay"></span>
+                    <button id="logoutBtn" class="btn btn-secondary btn-small">Logout</button>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+     <nav class="mobile-nav">
+        <ul class="mobile-nav-links">
+             <li><a href="#features">Features</a></li>
+             <li><a href="#showcase">Showcase</a></li>
+             <li><a href="#community">Community</a></li>
+             <li><a href="https://your-docs-link.com" target="_blank">Docs</a></li>
+             <li id="mobileAuthLinks">
+                 <!-- Login/Signup/Logout buttons will be injected here by JS -->
+             </li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-video-wrapper">
+                <!-- Replace with your actual video -->
+                <video autoplay muted loop playsinline poster="images/hero-poster.jpg" id="heroVideo">
+                    <source src="videos/your-editor-showcase.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="container hero-content">
+                <h1>Build Anything Imaginable</h1>
+                <p>The most powerful real-time 3D creation & game editing tool.</p>
+                <a href="#download" class="btn btn-primary btn-large">Get Started Now</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Unleash Your Creativity</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-cubes fa-3x feature-icon"></i>
+                        <h3>Intuitive Modeling</h3>
+                        <p>Powerful tools for creating complex 3D assets with ease.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-paint-brush fa-3x feature-icon"></i>
+                        <h3>Advanced Materials</h3>
+                        <p>Create stunningly realistic surfaces with our node-based editor.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-film fa-3x feature-icon"></i>
+                        <h3>Real-time Rendering</h3>
+                        <p>See your changes instantly with high-fidelity visuals.</p>
+                    </div>
+                     <div class="feature-card">
+                        <i class="fas fa-code fa-3x feature-icon"></i>
+                        <h3>Scripting & Logic</h3>
+                        <p>Bring your creations to life with visual or text-based scripting.</p>
+                    </div>
+                     <div class="feature-card">
+                        <i class="fas fa-vr-cardboard fa-3x feature-icon"></i>
+                        <h3>VR/AR Ready</h3>
+                        <p>Build immersive experiences for the next generation of platforms.</p>
+                    </div>
+                     <div class="feature-card">
+                        <i class="fas fa-cloud-upload-alt fa-3x feature-icon"></i>
+                        <h3>Cloud Collaboration</h3>
+                        <p>Work seamlessly with your team, anywhere in the world.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Section (Placeholder) -->
+        <section id="showcase" class="showcase" style="background-image: url('images/showcase-bg.jpg');">
+             <div class="showcase-overlay"></div>
+            <div class="container">
+                <h2>Powered by YourEditor</h2>
+                <p>See what creators are building.</p>
+                <!-- Add gallery/carousel here later -->
+                <div class="gallery-placeholder">
+                    <div class="gallery-item">(Amazing Project 1 Screenshot)</div>
+                    <div class="gallery-item">(Incredible Scene Render)</div>
+                    <div class="gallery-item">(Cool Game Mockup)</div>
+                </div>
+                 <a href="#download" class="btn btn-primary">Start Creating</a>
+            </div>
+        </section>
+
+        <!-- Community / Chat Section -->
+        <section id="community" class="community">
+            <div class="container">
+                <h2>Join the Community</h2>
+                <p>Connect with fellow creators, ask questions, and share your work.</p>
+
+                <div id="chatArea" style="display: none;"> <!-- Initially hidden -->
+                    <div id="chatMessages" class="chat-messages">
+                        <!-- Messages will be loaded here by JS -->
+                        <p class="loading-chat">Loading chat...</p>
+                    </div>
+                    <form id="chatForm" class="chat-form">
+                        <input type="text" id="chatInput" placeholder="Type your message..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+
+                <div id="chatLoginPrompt" style="display: block;"> <!-- Initially visible -->
+                    <p>Please <a href="#" id="chatLoginLink">log in</a> or <a href="#" id="chatSignupLink">sign up</a> to join the chat.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download / CTA Section -->
+        <section id="download" class="cta">
+            <div class="container">
+                <h2>Ready to Create?</h2>
+                <p>Download YourEditor today and start building your vision.</p>
+                <button class="btn btn-primary btn-large">Download Now (Beta)</button>
+                <p class="cta-subtext">Free for personal use and small teams.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <p>© <span id="currentYear"></span> Your Company Name. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeLogin">×</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <p id="loginError" class="error-message"></p>
+                <button type="submit" class="btn btn-primary">Login</button>
+                 <button type="button" id="googleSignInBtnLogin" class="btn btn-google">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </button>
+            </form>
+            <p>Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeSignup">×</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                 <div class="form-group">
+                    <label for="signupName">Display Name:</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required minlength="6">
+                </div>
+                 <p id="signupError" class="error-message"></p>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+                 <button type="button" id="googleSignInBtnSignup" class="btn btn-google">
+                    <i class="fab fa-google"></i> Sign up with Google
+                </button>
+            </form>
+             <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+        </div>
+    </div>
+
+
+    <!-- Firebase SDK -->
+    <!-- Get these from your Firebase project settings: Project settings > General > Your apps > SDK setup and configuration -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Your Custom JavaScript -->
+    <script src="js/app.js"></script>
+
+</body>
+</html>
