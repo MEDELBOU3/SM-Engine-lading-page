@@ -5,200 +5,477 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM Engine - Web-Based 3D Editor</title> <!-- Updated -->
     <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Default Avatar Preload (Optional but good practice) -->
-    <link rel="preload" href="images/default-avatar.png" as="image">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
-
-<header class="navbar">
-    <div class="container nav-container">
-        <a href="#" class="logo">SM Engine</a> <!-- Updated -->
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#showcase">Showcase</a></li>
-                <li><a href="#community">Community</a></li>
-                <li><a href="https://your-docs-link.com" target="_blank">Docs</a></li>
-            </ul>
-        </nav>
-        <div class="auth-buttons">
-            <button id="loginBtn" class="btn btn-secondary">Login</button>
-            <button id="signupBtn" class="btn btn-primary">Sign Up</button>
-        
-            <div id="userProfile" class="user-profile-container" style="display: none;">
-                <img id="userAvatarNav" src="images/default-avatar.png" alt="Avatar" class="nav-avatar">
-                <span id="userNameDisplay"></span>
-              
-                <button id="settingsBtn" class="btn-icon" title="Settings" aria-label="Settings"><i class="fas fa-cog"></i></button>
-                <button id="logoutBtn" class="btn btn-secondary btn-small">Logout</button>
-            </div>
-        </div>
-        <button class="mobile-menu-toggle" aria-label="Toggle Menu">
-            <i class="fas fa-bars"></i>
-        </button>
-    </div>
-</header>
- <nav class="mobile-nav">
-    <ul class="mobile-nav-links">
-         <li><a href="#features">Features</a></li>
-         <li><a href="#showcase">Showcase</a></li>
-         <li><a href="#community">Community</a></li>
-         <li><a href="https://your-docs-link.com" target="_blank">Docs</a></li>
-         <li id="mobileAuthLinks"></li>
-         <li id="mobileSettingsLink" style="display: none;"><a href="#" id="mobileSettingsBtn">Settings</a></li>
-    </ul>
-</nav>
-
-<main>
-    <section class="hero">
-        <div class="hero-video-wrapper">
-            <video autoplay muted loop playsinline poster="images/hero-poster.jpg" id="heroVideo">
-                <source src="videos/your-editor-showcase.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="hero-overlay"></div>
-        </div>
-        <div class="container hero-content">
-            <h1>Create 3D for the Web</h1> <!-- Updated -->
-            <p>The intuitive, powerful, browser-based 3D editor.</p> <!-- Updated -->
-            <a href="https://medelbou3.github.io/SM-Engine/" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large">
-                Launch Editor <i class="fas fa-rocket" style="margin-left: 8px;"></i>
-            </a>
-        </div>
-    </section>
-
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Unleash Your Creativity</h2>
-            <div class="features-grid">
-                <div class="feature-card"> <i class="fas fa-globe fa-3x feature-icon"></i> <h3>Web First</h3> <p>Create and publish directly for the web, no installs required.</p> </div>
-                <div class="feature-card"> <i class="fas fa-drafting-compass fa-3x feature-icon"></i> <h3>Intuitive Tools</h3> <p>Model, texture, and animate with an easy-to-learn interface.</p> </div>
-                <div class="feature-card"> <i class="fas fa-bolt fa-3x feature-icon"></i> <h3>Real-time PBR</h3> <p>See stunning results instantly with physically-based rendering.</p> </div>
-                <div class="feature-card"> <i class="fas fa-code fa-3x feature-icon"></i> <h3>Scripting Power</h3> <p>Bring scenes to life using JavaScript or visual scripting.</p> </div>
-                <div class="feature-card"> <i class="fas fa-share-alt fa-3x feature-icon"></i> <h3>Easy Export</h3> <p>Export to glTF, OBJ, and embed directly into websites.</p> </div>
-                <div class="feature-card"> <i class="fas fa-users fa-3x feature-icon"></i> <h3>Community Hub</h3> <p>Connect, learn, and share with fellow creators.</p> </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="showcase" class="showcase" style="background-image: url('images/showcase-bg.jpg');">
-        <div class="showcase-overlay"></div>
-        <div class="container">
-            <h2>Powered by SM Engine</h2> <!-- Updated -->
-            <p>See what creators are building.</p>
-            <div class="gallery-placeholder">
-                <div class="gallery-item">(Project 1 Screenshot)</div>
-                <div class="gallery-item">(Project 2 Render)</div>
-                <div class="gallery-item">(Project 3 Demo Still)</div>
-            </div>
-            <a href="https://medelbou3.github.io/SM-Engine/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Start Creating</a> <!-- Updated -->
-        </div>
-    </section>
-
-    <section id="community" class="community">
-        <div class="container">
-            <h2>Join the Community</h2>
-            <p>Connect with fellow creators, ask questions, and share your work.</p>
-
-            <div id="chatArea" class="chat-area-container" style="display: none;">
-                <div id="chatMessages" class="chat-messages custom-scrollbar">
-                    <div class="chat-message chat-message-other">
-                        <img src="images/other-avatar.png" alt="Avatar" class="chat-avatar">
-                        <div class="message-content">
-                            <strong class="message-username">OtherUser</strong>
-                            <p class="message-text">Hello there!</p>
-                            <span class="message-timestamp">10:30 AM</span>
+   <!-- Header -->
+    <header class="sticky-top shadow-lg">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a href="#" class="navbar-brand logo d-flex align-items-center gap-2">
+                    <i class="fas fa-cubes fa-fw"></i>
+                    <span>SM Engine</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#community">Community</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#showcase">Showcase</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                        <li class="nav-item d-lg-none"><hr class="dropdown-divider"></li>
+                        <li class="nav-item auth-buttons-inline d-lg-none d-flex gap-2 mb-2">
+                            <button class="btn btn-outline-primary btn-sm w-100" id="loginBtnMobile">Log In</button>
+                            <button class="btn btn-primary btn-sm w-100" id="signupBtnMobile">Sign Up</button>
+                        </li>
+                    </ul>
+                    <div class="auth-buttons d-none d-lg-flex gap-2 ms-lg-3">
+                        <button class="btn btn-outline-primary" id="loginBtn">Log In</button>
+                        <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                    </div>
+                    <div class="user-menu ms-lg-3" id="userMenu">
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatar" class="user-avatar rounded-circle me-2">
+                                <span class="user-name me-1" id="menuUserName">User</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#" id="profileMenuItem"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#" id="settingsMenuItem"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItem"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="chat-message chat-message-self">
-                        <div class="message-content">
-                            <p class="message-text">Hi! This looks great.</p>
-                            <span class="message-timestamp">10:31 AM</span>
-                        </div>
-                         <img src="images/my-avatar.png" alt="Avatar" class="chat-avatar">
-                    </div>
-             
-                    <p class="loading-chat">Loading chat...</p>
-                </div>
-                <form id="chatForm" class="chat-form">
-                    <img id="chatInputAvatar" src="images/default-avatar.png" alt="Your Avatar" class="chat-input-avatar">
-                    <input type="text" id="chatInput" placeholder="Type your message..." required autocomplete="off">
-                    <button type="submit" id="chatSendBtn" class="btn btn-primary btn-send" disabled>
-                        <i class="fas fa-paper-plane"></i> 
+                    <button class="theme-toggle ms-3" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
                     </button>
-                </form>
-                <p id="chatError" class="chat-error-message"></p>
+                </div>
             </div>
+        </nav>
+    </header>
 
-            <div id="chatLoginPrompt" class="chat-login-prompt-container" style="display: block;">
-                 <i class="fas fa-comments fa-2x" style="color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <p>Please <a href="#" id="chatLoginLink">log in</a> or <a href="#" id="chatSignupLink">sign up</a> to join the chat.</p>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="container position-relative">
+                <div class="row align-items-center min-vh-75">
+                    <div class="col-lg-7 hero-content text-center text-lg-start mb-5 mb-lg-0">
+                        <h1 class="display-3 fw-bolder mb-3 animate-fade-in-up">Forge Your Reality</h1>
+                        <p class="lead mb-4 animate-fade-in-up" style="animation-delay: 0.2s;">The ultimate creation suite for breathtaking 3D models, immersive game worlds, and collaborative development. Join the future of digital creation.</p>
+                        <div class="d-flex gap-3 justify-content-center justify-content-lg-start animate-fade-in-up" style="animation-delay: 0.4s;">
+                            <button class="btn btn-primary btn-lg px-4 py-2">Start Creating <i class="fas fa-arrow-right ms-2"></i></button>
+                            <button class="btn btn-outline-light btn-lg px-4 py-2">Watch Demo <i class="fas fa-play ms-2"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 d-none d-lg-block hero-visual animate-fade-in-right" style="animation-delay: 0.3s;">
+                        <!-- Placeholder for a 3D graphic or dynamic visual -->
+                         <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/wNWwMYHP4rqMfO6u/image.jpg" alt="3D Creation Visual" class="img-fluid rounded-3 shadow-lg">
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-  
-    <section id="get-started" class="cta"> 
+        <!-- Features Section -->
+        <section class="features py-5" id="features">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 fw-bold">Next-Gen Features</h2>
+                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Empowering tools designed for performance, flexibility, and stunning results.</p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <!-- Feature Cards -->
+                    <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-cubes"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">Hyper-Realistic Modeling</h3>
+                            <p>Intuitive sculpting, procedural generation, and PBR material workflow.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-gamepad-alt"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">Integrated Game Engine</h3>
+                            <p>Seamlessly transition from asset creation to interactive game development.</p>
+                        </div>
+                    </div>
+                     <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-users"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">Collaborative Cloud</h3>
+                            <p>Real-time project sharing, version control, and community asset marketplace.</p>
+                        </div>
+                    </div>
+                     <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-bolt"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">Real-time Ray Tracing</h3>
+                            <p>Achieve cinematic lighting and reflections instantly within the editor.</p>
+                        </div>
+                    </div>
+                     <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-vr-cardboard"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">VR/AR Native Support</h3>
+                            <p>Build and test immersive experiences directly for leading XR platforms.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="feature-card flex-fill">
+                            <div class="feature-icon mb-3"><i class="fas fa-code-branch"></i></div>
+                            <h3 class="h5 fw-semibold mb-2">Extensible Scripting API</h3>
+                            <p>Customize workflows and create powerful tools with Python or C++.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Section -->
+        <section class="showcase py-5 bg-gradient-dark" id="showcase">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 fw-bold">Creator Showcase</h2>
+                    <p class="lead text-light-emphasis mx-auto" style="max-width: 600px;">Incredible worlds and assets brought to life with 3D Craft.</p>
+                </div>
+                <div class="row g-4">
+                    <!-- Showcase Cards -->
+                     <div class="col-md-6 col-lg-4">
+                        <div class="showcase-card card text-white border-0 overflow-hidden">
+                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/BedHKXq3xm4pvYYN/image.jpg" class="card-img" alt="Project 1">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                                <h5 class="card-title fw-bold">Cyberpunk Alley</h5>
+                                <p class="card-text small">Atmospheric scene utilizing advanced lighting and volumetric effects.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="showcase-card card text-white border-0 overflow-hidden">
+                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/adWi7x59YabWOLgr/image.jpg" class="card-img" alt="Project 2">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                                <h5 class="card-title fw-bold">Enchanted Forest</h5>
+                                <p class="card-text small">Lush environment created with procedural foliage and dynamic weather.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="showcase-card card text-white border-0 overflow-hidden">
+                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/Mod3EAiHAyyWcpXt/image.jpg" class="card-img" alt="Project 3">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                                <h5 class="card-title fw-bold">Mech Bay Concept</h5>
+                                <p class="card-text small">Hard-surface model showcase featuring detailed texturing and PBR materials.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="community py-5" id="community">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 fw-bold">Connect & Collaborate</h2>
+                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Join the global 3D Craft network. Share knowledge, find collaborators, and get feedback.</p>
+                </div>
+
+                <!-- Login Prompt -->
+                <div class="login-prompt text-center p-5 rounded-3 mb-4" id="communityLoginPrompt">
+                    <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                    <h3 class="mb-3">Enter the Creator Hub</h3>
+                    <p class="text-muted mb-4">Log in or sign up to join discussions, share your work, and connect.</p>
+                    <button class="btn btn-primary btn-lg" id="communityLoginBtn">
+                       <i class="fas fa-sign-in-alt me-2"></i> Access Community
+                    </button>
+                </div>
+
+                <!-- Community Hub Container -->
+                <div class="community-container shadow-lg rounded-3 overflow-hidden" id="communityContainer">
+                    <!-- Header -->
+                    <div class="community-header d-flex justify-content-between align-items-center p-3">
+                        <h4 class="mb-0 d-flex align-items-center gap-2"><i class="fas fa-users-cog"></i> Creator Hub</h4>
+                        <button class="btn btn-sm btn-icon" id="communitySettingsBtn" aria-label="Community Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body (Sidebar + Chat) -->
+                    <div class="community-body d-flex">
+                        <!-- Sidebar -->
+                        <div class="community-sidebar d-flex flex-column p-3">
+                            <h5 class="sidebar-title text-muted small text-uppercase mb-2 px-2">Channels</h5>
+                            <nav class="nav flex-column nav-pills" id="channelList">
+                                <a class="nav-link sidebar-item active" href="#" data-channel="general"><i class="fas fa-globe-americas fa-fw me-2"></i>General</a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="modeling"><i class="fas fa-cube fa-fw me-2"></i>Modeling</a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="gaming"><i class="fas fa-gamepad fa-fw me-2"></i>Gaming</a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="design"><i class="fas fa-palette fa-fw me-2"></i>Design</a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="scripting"><i class="fas fa-code fa-fw me-2"></i>Scripting</a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="showcase-feedback"><i class="fas fa-camera-retro fa-fw me-2"></i>Showcase</a>
+                            </nav>
+                            <div class="mt-auto p-2 text-center text-muted small">
+                                <i class="fas fa-wifi"></i> Connected
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div class="community-chat d-flex flex-column flex-grow-1">
+                            <!-- Messages -->
+                            <div class="chat-messages flex-grow-1 p-3" id="chatMessages">
+                                <!-- Messages will be loaded here -->
+                                <div class="text-center text-muted p-5">Loading messages...</div>
+                            </div>
+                            <!-- Input -->
+                            <div class="chat-input d-flex align-items-center p-3 gap-2">
+                                <input type="text" class="form-control" placeholder="Type your message in #general..." id="messageInput" aria-label="Chat message input">
+                                <button class="btn btn-primary btn-icon" id="sendMessageBtn" aria-label="Send message">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer pt-5 pb-4">
         <div class="container">
-            <h2>Ready to Create?</h2>
-            <p>Launch the SM Engine editor directly in your browser and start building.</p>
-            <a href="https://medelbou3.github.io/SM-Engine/" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large">
-                Launch Web Editor <i class="fas fa-external-link-alt" style="margin-left: 8px;"></i>
-            </a>
-            <p class="cta-subtext">Free to use. Runs best on Chrome/Firefox/Edge.</p>
-        </div>
-    </section>
-</main>
-
-<footer class="footer">
-    <div class="container">
-        <div class="footer-links">
-            <a href="#">About</a> <a href="#">Docs</a> <a href="#">Community</a> <a href="#">Privacy Policy</a> <a href="#">Terms</a>
-        </div>
-        <div class="social-icons">
-            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
-            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        </div>
-        <p>© <span id="currentYear"></span> SM Engine Project. All rights reserved.</p>
-    </div>
-</footer>
-
-<!-- Modals -->
-<div id="loginModal" class="modal"> <div class="modal-content"> <span class="close-btn" id="closeLogin">×</span> <h2>Login</h2> <form id="loginForm"> <div class="form-group"> <label for="loginEmail">Email:</label> <input type="email" id="loginEmail" required> </div> <div class="form-group"> <label for="loginPassword">Password:</label> <input type="password" id="loginPassword" required> </div> <p id="loginError" class="error-message"></p> <button type="submit" class="btn btn-primary btn-block">Login</button> <button type="button" id="googleSignInBtnLogin" class="btn btn-google btn-block"> <i class="fab fa-google"></i> Sign in with Google </button> </form> <p>Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p> </div> </div>
-<div id="signupModal" class="modal"> <div class="modal-content"> <span class="close-btn" id="closeSignup">×</span> <h2>Sign Up</h2> <form id="signupForm"> <div class="form-group"> <label for="signupName">Display Name:</label> <input type="text" id="signupName" required> </div> <div class="form-group"> <label for="signupEmail">Email:</label> <input type="email" id="signupEmail" required> </div> <div class="form-group"> <label for="signupPassword">Password:</label> <input type="password" id="signupPassword" required minlength="6"> </div> <p id="signupError" class="error-message"></p> <button type="submit" class="btn btn-primary btn-block">Sign Up</button> <button type="button" id="googleSignInBtnSignup" class="btn btn-google btn-block"> <i class="fab fa-google"></i> Sign up with Google </button> </form> <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p> </div> </div>
-
-<div id="settingsModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" id="closeSettings">×</span>
-        <h2>Settings</h2>
-        <div class="settings-section">
-            <label>Profile Picture:</label>
-            <div class="avatar-setting">
-                <img id="settingsAvatarPreview" src="images/default-avatar.png" alt="Avatar Preview" class="settings-avatar">
-                <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;">
-                <button id="changeAvatarBtn" class="btn btn-secondary btn-small">Change</button>
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="logo d-flex align-items-center gap-2 mb-3">
+                        <i class="fas fa-cubes fa-fw"></i>
+                        <span>3D Craft</span>
+                    </h4>
+                    <p class="text-light-emphasis pe-lg-4">The next generation suite for 3D modeling, game development, and digital creation. Empowering creators worldwide.</p>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h5 class="footer-heading mb-3">Platform</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#showcase">Showcase</a></li>
+                        <li><a href="#community">Community</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h5 class="footer-heading mb-3">Resources</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                 <div class="col-lg-2 col-md-6 col-6">
+                    <h5 class="footer-heading mb-3">Company</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5 class="footer-heading mb-3">Connect</h5>
+                    <ul class="list-unstyled d-flex gap-3 social-links">
+                        <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a></li>
+                        <li><a href="#" aria-label="Discord"><i class="fab fa-discord fa-lg"></i></a></li>
+                        <li><a href="#" aria-label="YouTube"><i class="fab fa-youtube fa-lg"></i></a></li>
+                        <li><a href="#" aria-label="Github"><i class="fab fa-github fa-lg"></i></a></li>
+                    </ul>
+                </div>
             </div>
-            <p id="avatarUploadStatus" class="upload-status"></p>
+            <hr class="my-4">
+            <div class="text-center text-light-emphasis small">
+                © <span id="currentYear"></span> SM Engine. All Rights Reserved. | <a href="#" class="footer-link">Privacy Policy</a> | <a href="#" class="footer-link">Terms of Service</a>
+            </div>
         </div>
-         <div class="settings-section">
-             <label for="settingsDisplayName">Display Name:</label>
-             <p id="settingsDisplayNameText" style="font-weight: 500;"></p>
-         </div>
+    </footer>
+
+
+    <!-- Modals -->
+    <!-- Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalTitle">Authenticate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#loginContent" type="button" role="tab" aria-controls="loginContent" aria-selected="true">Log In</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="signup-tab" data-bs-toggle="pill" data-bs-target="#signupContent" type="button" role="tab" aria-controls="signupContent" aria-selected="false">Sign Up</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="authTabContent">
+                        <!-- Login Form -->
+                        <div class="tab-pane fade show active" id="loginContent" role="tabpanel" aria-labelledby="login-tab">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="loginEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="loginEmail" required aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 mb-3">Log In</button>
+                                <div class="text-center text-muted mb-3 or-divider"><span>OR</span></div>
+                                <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleLoginBtn">
+                                    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
+                                </button>
+                                <div id="loginError" class="text-danger mt-3 small d-none"></div>
+                            </form>
+                        </div>
+                        <!-- Signup Form -->
+                        <div class="tab-pane fade" id="signupContent" role="tabpanel" aria-labelledby="signup-tab">
+                            <form id="signupForm">
+                                <div class="mb-3">
+                                    <label for="signupName" class="form-label">Display Name</label>
+                                    <input type="text" class="form-control" id="signupName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="signupEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="signupEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="signupPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="signupPassword" required minlength="6">
+                                    <div class="form-text">Minimum 6 characters</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 mb-3">Sign Up</button>
+                                <div class="text-center text-muted mb-3 or-divider"><span>OR</span></div>
+                                <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleSignupBtn">
+                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
+                                </button>
+                                <div id="signupError" class="text-danger mt-3 small d-none"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="profile-header-banner">
+                    <img src="placeholder-avatar.png" alt="User Avatar" class="profile-modal-avatar shadow" id="profileModalAvatar">
+                </div>
+                <div class="modal-header border-0 pt-5 pb-0 justify-content-end">
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center pt-2 pb-4 px-4">
+                    <h2 class="modal-title mb-1" id="profileModalName">User Name</h2>
+                    <p class="text-muted mb-3" id="profileModalEmail">user@example.com</p>
+                    <p class="mb-4" id="profileModalBio">No bio provided yet. Edit your profile in settings!</p>
+                    <div class="d-flex justify-content-center gap-4 mb-4">
+                        <div class="text-center">
+                            <div class="fs-4 fw-bold" id="statProjects">12</div>
+                            <div class="small text-muted">Projects</div>
+                        </div>
+                         <div class="text-center">
+                            <div class="fs-4 fw-bold" id="statFollowers">145</div>
+                            <div class="small text-muted">Followers</div>
+                        </div>
+                         <div class="text-center">
+                            <div class="fs-4 fw-bold" id="statFollowing">88</div>
+                            <div class="small text-muted">Following</div>
+                        </div>
+                    </div>
+                     <button class="btn btn-primary" id="editProfileBtn"><i class="fas fa-pencil-alt me-2"></i>Edit Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel"><i class="fas fa-cog me-2"></i>Account Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="settingsForm">
+                        <div class="alert alert-success d-none" role="alert" id="settingsSuccess">
+                          Profile updated successfully!
+                        </div>
+                         <div class="alert alert-danger d-none" role="alert" id="settingsError">
+                          An error occurred. Please try again.
+                        </div>
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-auto">
+                                <img src="placeholder-avatar.png" alt="Avatar Preview" id="avatarPreview" class="settings-avatar-preview rounded-circle">
+                            </div>
+                            <div class="col">
+                                <label for="avatarInput" class="form-label">Profile Picture</label>
+                                <div class="d-flex gap-2">
+                                    <input type="file" id="avatarInput" accept="image/*" class="d-none">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="uploadAvatarBtn"><i class="fas fa-upload me-1"></i> Upload New</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" id="removeAvatarBtn"><i class="fas fa-trash-alt me-1"></i> Remove</button>
+                                </div>
+                                <div class="form-text">Upload a JPG, PNG, or GIF. Max size 2MB.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="settingsName" class="form-label">Display Name</label>
+                            <input type="text" class="form-control" id="settingsName" required>
+                        </div>
+                         <div class="mb-3">
+                            <label for="settingsEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="settingsEmail" disabled readonly>
+                            <div class="form-text">Email cannot be changed here.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="settingsBio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="settingsBio" rows="3" placeholder="Tell us a bit about yourself..."></textarea>
+                        </div>
+                        <div class="text-end">
+                             <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                             <button type="submit" class="btn btn-primary" id="saveSettingsBtn">
+                                <span class="spinner-border spinner-border-sm d-none me-1" role="status" aria-hidden="true" id="settingsSpinner"></span>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <!-- Firebase SDK -->
+    <!-- IMPORTANT: Use the latest compatible versions -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 
 <!-- Your Custom JavaScript -->
 <script src="app.js"></script>
