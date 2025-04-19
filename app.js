@@ -1,17 +1,20 @@
+/* === app.js (Complete Rewrite) === */
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Firebase Configuration ---
-     const firebaseConfig = {
-       apiKey: "AIzaSyDp2V0ULE-32AcIJ92a_e3mhMe6f6yZ_H4",
-       authDomain: "sm4movies.firebaseapp.com",
-       projectId: "sm4movies",
-       storageBucket: "sm4movies.firebasestorage.app",
-       messagingSenderId: "277353836953",
-       appId: "1:277353836953:web:85e02783526c7cb58de308",
-       measurementId: "G-690RSNJ2Q2"
+    // IMPORTANT: REPLACE WITH YOUR ACTUAL FIREBASE CONFIGURATION
+    const firebaseConfig = {
+        apiKey: "AIzaSyDp2V0ULE-32AcIJ92a_e3mhMe6f6yZ_H4",
+        authDomain: "sm4movies.firebaseapp.com",
+        projectId: "sm4movies",
+        storageBucket: "sm4movies.firebasestorage.app",
+        messagingSenderId: "277353836953",
+        appId: "1:277353836953:web:85e02783526c7cb58de308",
+        measurementId: "G-690RSNJ2Q2"
     };
 
-    // --- Initialize Firebase ---
+    // --- Initialize Firebase (V8 Syntax) ---
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     } else {
@@ -24,13 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
     // --- Constants ---
-    const DEFAULT_AVATAR_URL = 'images/default-avatar.png'; // Path to your default avatar
+    const DEFAULT_AVATAR_URL = 'images/default-avatar.png'; // Path to default avatar
 
     // --- DOM Element References ---
+    // Navbar & Auth
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    const settingsBtn = document.getElementById('settingsBtn'); // Navbar settings button
+    const settingsBtn = document.getElementById('settingsBtn');
     const userProfileDiv = document.getElementById('userProfile');
     const userNameDisplay = document.getElementById('userNameDisplay');
     const userAvatarNav = document.getElementById('userAvatarNav');
@@ -38,15 +42,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileSettingsLink = document.getElementById('mobileSettingsLink');
     const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
 
+    // Modals & Controls
     const loginModal = document.getElementById('loginModal');
     const signupModal = document.getElementById('signupModal');
-    const settingsModal = document.getElementById('settingsModal'); // Settings modal
+    const settingsModal = document.getElementById('settingsModal');
     const closeLogin = document.getElementById('closeLogin');
     const closeSignup = document.getElementById('closeSignup');
-    const closeSettings = document.getElementById('closeSettings'); // Close settings modal
+    const closeSettings = document.getElementById('closeSettings');
     const switchToSignup = document.getElementById('switchToSignup');
     const switchToLogin = document.getElementById('switchToLogin');
 
+    // Forms & Errors
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     const loginError = document.getElementById('loginError');
@@ -55,14 +61,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const googleSignInBtnSignup = document.getElementById('googleSignInBtnSignup');
 
     // Settings Modal Elements
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-    const avatarUploadInput = document.getElementById('avatarUploadInput');
     const settingsAvatarPreview = document.getElementById('settingsAvatarPreview');
+    const avatarUploadInput = document.getElementById('avatarUploadInput');
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
     const avatarUploadStatus = document.getElementById('avatarUploadStatus');
-    const settingsDisplayNameInput = document.getElementById('settingsDisplayName');
+    const settingsDisplayNameText = document.getElementById('settingsDisplayNameText');
 
     // Chat Elements
-    const chatAreaWrapper = document.getElementById('chatAreaWrapper');
     const chatArea = document.getElementById('chatArea');
     const chatMessagesDiv = document.getElementById('chatMessages');
     const chatForm = document.getElementById('chatForm');
@@ -70,363 +75,78 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatSendBtn = document.getElementById('chatSendBtn');
     const chatInputAvatar = document.getElementById('chatInputAvatar');
     const chatLoginPrompt = document.getElementById('chatLoginPrompt');
-    const chatLoginLinkBtn = document.getElementById('chatLoginLinkBtn'); // Button in prompt
-    const chatSignupLinkBtn = document.getElementById('chatSignupLinkBtn'); // Button in prompt
+    const chatLoginLink = document.getElementById('chatLoginLink');
+    const chatSignupLink = document.getElementById('chatSignupLink');
     const chatError = document.getElementById('chatError');
 
-
+    // Other
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
     const currentYearSpan = document.getElementById('currentYear');
+    const body = document.body;
 
     // --- State Variables ---
-    let currentUser = null;
-    let messagesListener = null;
-    let isUploadingAvatar = false;
+    let currentUser = null;         // Holds the firebase auth user object when logged in
+    let messagesListener = null;    // Holds the function to unsubscribe from Firestore listener
+    let isUploadingAvatar = false;  // Flag to prevent simultaneous avatar uploads
 
     // --- Helper Functions ---
+
+    // Escapes HTML to prevent XSS attacks when displaying user-generated content
     function escapeHTML(str) {
         const div = document.createElement('div');
-        div.appendChild(document.createTextNode(str || '')); // Handle null/undefined input
+        div.appendChild(document.createTextNode(str || '')); // Ensure input is treated as text
         return div.innerHTML;
     }
 
+    // Formats Firebase Timestamps (or JS Dates) into a readable time string
     function formatTimestamp(timestamp) {
-        if (!timestamp?.toDate) return 'Sending...';
-        const date = timestamp.toDate();
-        // Optional: Use date-fns if included via CDN
-        if (typeof dateFns !== 'undefined') {
-             const now = new Date();
-             const diffHours = dateFns.differenceInHours(now, date);
-             if (diffHours < 24) {
-                 return dateFns.formatDistanceToNowStrict(date, { addSuffix: true });
-             } else {
-                 return dateFns.format(date, 'PPp'); // e.g., Sep 21, 2023, 1:30 PM
-             }
-        } else {
-            // Basic fallback formatting
-            const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-            const day = date.toLocaleDateString();
-            return `${time}, ${day}`;
+        if (!timestamp?.toDate) return ''; // Return empty if invalid
+        try {
+            const date = timestamp.toDate();
+            return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        } catch (e) {
+            console.error("Error formatting timestamp:", e);
+            return '';
         }
     }
 
-     // --- UI Update Functions ---
+    // Shows a modal with a fade/scale effect
     function showModal(modal) {
-        clearErrorMessages(); // Clear errors when showing any modal
-        modal.classList.add('show');
-        // Trigger AOS animation for modal content if AOS is used
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent && typeof AOS !== 'undefined') {
-            AOS.refreshHard([modalContent]); // Re-trigger animation for this specific element
-        }
+        clearErrorMessages(); // Clear any previous errors
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10); // Short delay for CSS transition
     }
 
+    // Hides a modal with a fade/scale effect
     function hideModal(modal) {
         modal.classList.remove('show');
-        // Optional: Reset forms when hiding
-        const form = modal.querySelector('form');
-        if (form) form.reset();
-        // Clear avatar upload status on close
-         if (modal === settingsModal) {
-             avatarUploadStatus.textContent = '';
-             avatarUploadStatus.className = 'upload-status-message';
-             avatarUploadInput.value = ''; // Reset file input
-         }
+        setTimeout(() => {
+            modal.style.display = 'none';
+            const form = modal.querySelector('form');
+            if (form) form.reset(); // Reset form fields
+            if (modal === settingsModal) { // Clear settings modal specifics
+                avatarUploadStatus.textContent = '';
+                avatarUploadStatus.className = 'upload-status';
+                avatarUploadInput.value = '';
+            }
+        }, 300); // Match CSS transition duration (0.3s)
     }
 
+    // Clears all error message fields
     function clearErrorMessages() {
         loginError.textContent = '';
         signupError.textContent = '';
-        chatError.textContent = ''; // Clear chat error too
-        avatarUploadStatus.textContent = ''; // Clear upload status
-         avatarUploadStatus.className = 'upload-status-message';
+        chatError.textContent = '';
+        avatarUploadStatus.textContent = '';
+        avatarUploadStatus.className = 'upload-status';
     }
 
-     function updateNavUI(user) {
-        // Desktop Nav
-        if (user) {
-            loginBtn.style.display = 'none';
-            signupBtn.style.display = 'none';
-            userProfileDiv.style.display = 'flex';
-            // Use displayName, fallback to 'User' if somehow null/empty after signup logic
-            userNameDisplay.textContent = user.displayName || 'User';
-            // Use photoURL, fallback to default
-            userAvatarNav.src = user.photoURL || DEFAULT_AVATAR_URL;
-             userAvatarNav.onerror = () => { userAvatarNav.src = DEFAULT_AVATAR_URL; }; // Fallback if image load fails
-        } else {
-            loginBtn.style.display = 'inline-block';
-            signupBtn.style.display = 'inline-block';
-            userProfileDiv.style.display = 'none';
-        }
-
-        // Mobile Nav
-        mobileAuthLinks.innerHTML = ''; // Clear previous
-         mobileSettingsLink.style.display = user ? 'block' : 'none'; // Show/hide settings link
-
-        if (user) {
-             // Display user info in mobile nav
-            const mobileProfile = document.createElement('li');
-            mobileProfile.className = 'mobile-user-info'; // Add class for potential styling
-            mobileProfile.innerHTML = `
-                <img src="${user.photoURL || DEFAULT_AVATAR_URL}" alt="Avatar" class="mobile-nav-avatar">
-                <span>Hi, ${escapeHTML(user.displayName || 'User')}</span>
-            `;
-            mobileProfile.querySelector('img').onerror = (e) => { e.target.src = DEFAULT_AVATAR_URL; };
-             mobileAuthLinks.appendChild(mobileProfile);
-
-
-            const mobileLogoutBtn = document.createElement('li');
-            mobileLogoutBtn.innerHTML = `<button id="mobileLogoutBtn" class="btn btn-secondary btn-block">Logout</button>`;
-            mobileAuthLinks.appendChild(mobileLogoutBtn);
-            document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
-
-        } else {
-             // Add login/signup buttons
-            const mobileLoginBtn = document.createElement('li');
-            mobileLoginBtn.innerHTML = `<button id="mobileLoginBtn" class="btn btn-secondary btn-block">Login</button>`;
-            mobileAuthLinks.appendChild(mobileLoginBtn);
-            document.getElementById('mobileLoginBtn').addEventListener('click', () => {
-                showModal(loginModal);
-                closeMobileNav(); // Close nav after clicking
-            });
-
-            const mobileSignupBtn = document.createElement('li');
-            mobileSignupBtn.innerHTML = `<button id="mobileSignupBtn" class="btn btn-primary btn-block">Sign Up</button>`;
-            mobileAuthLinks.appendChild(mobileSignupBtn);
-            document.getElementById('mobileSignupBtn').addEventListener('click', () => {
-                showModal(signupModal);
-                closeMobileNav(); // Close nav after clicking
-            });
-        }
-    }
-
-    function updateChatUI(user) {
-        if (user) {
-            chatLoginPrompt.style.display = 'none'; // Hide login prompt
-            chatArea.classList.add('active'); // Show chat interface (using class for display:flex)
-            chatInputAvatar.src = user.photoURL || DEFAULT_AVATAR_URL; // Update input area avatar
-             chatInputAvatar.onerror = () => { chatInputAvatar.src = DEFAULT_AVATAR_URL; };
-            fetchAndDisplayMessages();
-        } else {
-            chatLoginPrompt.style.display = 'block'; // Show login prompt
-            chatArea.classList.remove('active'); // Hide chat interface
-             chatInputAvatar.src = DEFAULT_AVATAR_URL; // Reset input avatar
-            if (messagesListener) {
-                messagesListener();
-                messagesListener = null;
-            }
-            // Clear messages or show placeholder in the messages div
-            chatMessagesDiv.innerHTML = '<div class="chat-loading-placeholder">Login to see messages</div>';
-        }
-        // Update send button state based on input
-        chatSendBtn.disabled = !chatInput.value.trim();
-    }
-
-     // Update Settings Modal UI
-    function updateSettingsUI(user) {
-        if (user && settingsModal.classList.contains('show')) {
-             settingsAvatarPreview.src = user.photoURL || DEFAULT_AVATAR_URL;
-             settingsAvatarPreview.onerror = () => { settingsAvatarPreview.src = DEFAULT_AVATAR_URL; };
-             settingsDisplayNameInput.value = user.displayName || '';
-        }
-    }
-
-
-    // --- Authentication Handlers ---
-    function handleSignup(event) {
-        event.preventDefault();
-        clearErrorMessages();
-        const displayName = signupForm.signupName.value.trim();
-        const email = signupForm.signupEmail.value;
-        const password = signupForm.signupPassword.value;
-
-        if (!displayName || displayName.length < 3) {
-            signupError.textContent = 'Display name must be at least 3 characters.';
-            return;
-        }
-        if (password.length < 6) {
-             signupError.textContent = 'Password must be at least 6 characters long.';
-            return;
-        }
-
-        // Disable button during signup
-        const signupButton = signupForm.querySelector('button[type="submit"]');
-        signupButton.disabled = true;
-        signupButton.textContent = 'Signing Up...';
-
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Update profile with display name AND default avatar
-                 return userCredential.user.updateProfile({
-                    displayName: displayName,
-                    photoURL: DEFAULT_AVATAR_URL // Set default avatar here
-                });
-            })
-             .then(() => {
-                console.log('User signed up and profile updated:', auth.currentUser);
-                hideModal(signupModal);
-                // Auth state listener will handle UI update
-            })
-            .catch((error) => {
-                console.error("Signup Error:", error);
-                signupError.textContent = getFriendlyAuthErrorMessage(error);
-            })
-            .finally(() => {
-                // Re-enable button
-                signupButton.disabled = false;
-                 signupButton.textContent = 'Sign Up';
-            });
-    }
-
-    function handleLogin(event) {
-        event.preventDefault();
-        clearErrorMessages();
-        const email = loginForm.loginEmail.value;
-        const password = loginForm.loginPassword.value;
-
-        const loginButton = loginForm.querySelector('button[type="submit"]');
-        loginButton.disabled = true;
-        loginButton.textContent = 'Logging In...';
-
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                console.log('User logged in:', userCredential.user);
-                hideModal(loginModal);
-            })
-            .catch((error) => {
-                console.error("Login Error:", error);
-                loginError.textContent = getFriendlyAuthErrorMessage(error);
-            })
-             .finally(() => {
-                loginButton.disabled = false;
-                 loginButton.textContent = 'Login';
-            });
-    }
-
-    function handleGoogleSignIn() {
-        clearErrorMessages();
-         // Disable buttons temporarily
-         googleSignInBtnLogin.disabled = true;
-         googleSignInBtnSignup.disabled = true;
-
-        auth.signInWithPopup(googleProvider)
-            .then((result) => {
-                // result.user should have displayName and photoURL from Google
-                console.log('Google Sign-In successful:', result.user);
-                 // Ensure local currentUser state is updated immediately if needed,
-                 // though onAuthStateChanged should handle the main update.
-                currentUser = {
-                    ...result.user,
-                    displayName: result.user.displayName || 'User', // Add fallbacks just in case
-                    photoURL: result.user.photoURL || DEFAULT_AVATAR_URL
-                 };
-                 updateSettingsUI(currentUser); // Update settings preview if open
-
-                 hideModal(loginModal);
-                 hideModal(signupModal);
-                 // UI updates will be primarily handled by onAuthStateChanged
-            }).catch((error) => {
-                // --- Handle Google Sign-in Cancellation ---
-                if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-                    console.log('Google Sign-in cancelled by user.');
-                    // No error message needed for cancellation
-                } else {
-                    console.error("Google Sign-In Error:", error);
-                    const friendlyError = getFriendlyAuthErrorMessage(error);
-                    loginError.textContent = friendlyError;
-                    signupError.textContent = friendlyError; // Show in both modals
-                }
-            })
-             .finally(() => {
-                 // Re-enable buttons
-                 googleSignInBtnLogin.disabled = false;
-                 googleSignInBtnSignup.disabled = false;
-             });
-    }
-
-    function handleLogout() {
-        if (messagesListener) {
-            messagesListener(); // Unsubscribe from chat listener
-            messagesListener = null;
-        }
-        auth.signOut().then(() => {
-            console.log('User signed out');
-            currentUser = null;
-             closeMobileNav(); // Close mobile nav on logout
-            // Auth state listener handles UI update
-        }).catch((error) => {
-            console.error("Logout Error:", error);
-            alert('Error signing out. Please try again.');
-        });
-    }
-
-     // Function to upload avatar
-    function uploadAvatar(file) {
-        if (!currentUser || isUploadingAvatar) return;
-        if (!file) {
-            avatarUploadStatus.textContent = 'No file selected.';
-            avatarUploadStatus.className = 'upload-status-message error';
-            return;
-        }
-         if (!file.type.startsWith('image/')) {
-            avatarUploadStatus.textContent = 'Please select an image file.';
-            avatarUploadStatus.className = 'upload-status-message error';
-             return;
-         }
-        if (file.size > 5 * 1024 * 1024) { // 5MB Limit
-            avatarUploadStatus.textContent = 'File too large (Max 5MB).';
-             avatarUploadStatus.className = 'upload-status-message error';
-            return;
-        }
-
-        isUploadingAvatar = true;
-        avatarUploadStatus.textContent = 'Uploading...';
-        avatarUploadStatus.className = 'upload-status-message';
-        changeAvatarBtn.disabled = true;
-
-        const filePath = `avatars/${currentUser.uid}/${Date.now()}_${file.name}`;
-        const storageRef = storage.ref(filePath);
-
-        storageRef.put(file)
-            .then(snapshot => snapshot.ref.getDownloadURL())
-            .then(downloadURL => {
-                // Update Auth profile
-                return auth.currentUser.updateProfile({ photoURL: downloadURL });
-            })
-            .then(() => {
-                console.log('Avatar updated successfully.');
-                avatarUploadStatus.textContent = 'Avatar updated!';
-                 avatarUploadStatus.className = 'upload-status-message success';
-                // Update UI immediately (nav bar, settings preview)
-                userAvatarNav.src = auth.currentUser.photoURL;
-                settingsAvatarPreview.src = auth.currentUser.photoURL;
-                chatInputAvatar.src = auth.currentUser.photoURL; // Update chat input avatar too
-                 // Update local state (important if other components rely on currentUser directly)
-                 currentUser.photoURL = auth.currentUser.photoURL;
-
-                 // Clear success message after a delay
-                 setTimeout(() => {
-                    avatarUploadStatus.textContent = '';
-                    avatarUploadStatus.className = 'upload-status-message';
-                 }, 3000);
-            })
-            .catch(error => {
-                console.error("Avatar Upload Error:", error);
-                avatarUploadStatus.textContent = 'Upload failed. Please try again.';
-                avatarUploadStatus.className = 'upload-status-message error';
-            })
-            .finally(() => {
-                isUploadingAvatar = false;
-                changeAvatarBtn.disabled = false;
-                avatarUploadInput.value = ''; // Reset file input
-            });
-    }
-
-
+    // Provides user-friendly error messages based on Firebase error codes
     function getFriendlyAuthErrorMessage(error) {
-        // ... (keep the previous switch statement)
+        console.log("Auth Error Code:", error.code); // Log the code for debugging
         switch (error.code) {
             case 'auth/user-not-found':
             case 'auth/wrong-password':
@@ -437,288 +157,569 @@ document.addEventListener('DOMContentLoaded', function() {
                 return 'Password must be at least 6 characters.';
             case 'auth/invalid-email':
                 return 'Please enter a valid email address.';
-            case 'auth/popup-closed-by-user': // Already handled, but keep for completeness
+            case 'auth/popup-closed-by-user':
             case 'auth/cancelled-popup-request':
-                 return 'Google Sign-in cancelled.'; // Can return empty string if preferred
-             case 'auth/popup-blocked':
-                 return 'Google Sign-in popup blocked. Please enable popups.';
-            // Firebase Storage errors (if needed elsewhere, add cases)
+                return ''; // Return empty string for user cancellations (no error shown)
+            case 'auth/popup-blocked':
+                return 'Google Sign-in popup blocked. Please allow popups for this site.';
             case 'storage/unauthorized':
-                return 'You do not have permission to upload this file.';
+                return 'Permission denied. Please check storage rules.';
+            case 'storage/object-not-found':
+                return 'File not found during upload.';
             case 'storage/canceled':
                 return 'Upload cancelled.';
-            case 'storage/unknown':
-                return 'An unknown storage error occurred.';
             default:
-                 console.warn("Unhandled auth error code:", error.code); // Log unhandled codes
-                return error.message || 'An unexpected error occurred. Please try again.';
+                console.warn("Unhandled error:", error); // Log unexpected errors
+                return 'An unexpected error occurred. Please try again.';
         }
     }
 
+    // Closes the mobile navigation menu
+    function closeMobileNav() {
+        if (mobileNav.classList.contains('active')) {
+            mobileNav.classList.remove('active');
+            mobileMenuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+        }
+    }
+
+    // Disables/Enables a button and optionally changes its text
+    function setButtonLoading(button, isLoading, loadingText = 'Loading...') {
+        if (!button) return;
+        button.disabled = isLoading;
+        if (isLoading) {
+            button.dataset.originalText = button.textContent; // Store original text
+            button.textContent = loadingText;
+        } else {
+            button.textContent = button.dataset.originalText || button.textContent; // Restore original text
+        }
+    }
+
+    // --- UI Update Functions ---
+
+    // Updates the navigation bar based on login state
+    function updateNavUI(user) {
+        if (user) {
+            // Logged In State
+            loginBtn.style.display = 'none';
+            signupBtn.style.display = 'none';
+            userProfileDiv.style.display = 'flex';
+            userNameDisplay.textContent = user.displayName || 'User'; // Use display name or fallback
+            userAvatarNav.src = user.photoURL || DEFAULT_AVATAR_URL; // Use photo URL or default
+            userAvatarNav.onerror = () => { userAvatarNav.src = DEFAULT_AVATAR_URL; }; // Handle image load error
+        } else {
+            // Logged Out State
+            loginBtn.style.display = 'inline-block';
+            signupBtn.style.display = 'inline-block';
+            userProfileDiv.style.display = 'none';
+        }
+
+        // Update Mobile Navigation Links
+        mobileAuthLinks.innerHTML = ''; // Clear previous mobile links
+        mobileSettingsLink.style.display = user ? 'list-item' : 'none'; // Toggle settings link visibility
+
+        if (user) {
+            // Add user info and logout to mobile nav
+            const mobileProfile = document.createElement('li');
+            mobileProfile.className = 'mobile-user-info';
+            mobileProfile.innerHTML = `
+                <img src="${escapeHTML(user.photoURL || DEFAULT_AVATAR_URL)}" alt="Avatar" class="mobile-nav-avatar" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                <span>Hi, ${escapeHTML(user.displayName || 'User')}</span>`;
+            mobileAuthLinks.appendChild(mobileProfile);
+
+            const mobileLogoutLi = document.createElement('li');
+            const mobileLogoutBtn = document.createElement('button');
+            mobileLogoutBtn.id = 'mobileLogoutBtn';
+            mobileLogoutBtn.className = 'btn btn-secondary btn-block';
+            mobileLogoutBtn.textContent = 'Logout';
+            mobileLogoutLi.appendChild(mobileLogoutBtn);
+            mobileAuthLinks.appendChild(mobileLogoutLi);
+             // Ensure event listener is attached correctly
+             mobileLogoutBtn.addEventListener('click', handleLogout);
+
+        } else {
+            // Add login/signup buttons to mobile nav
+            const mobileLoginLi = document.createElement('li');
+            mobileLoginLi.innerHTML = `<button id="mobileLoginBtn" class="btn btn-secondary btn-block">Login</button>`;
+            mobileAuthLinks.appendChild(mobileLoginLi);
+            document.getElementById('mobileLoginBtn').addEventListener('click', () => { showModal(loginModal); closeMobileNav(); });
+
+            const mobileSignupLi = document.createElement('li');
+            mobileSignupLi.innerHTML = `<button id="mobileSignupBtn" class="btn btn-primary btn-block">Sign Up</button>`;
+            mobileAuthLinks.appendChild(mobileSignupLi);
+            document.getElementById('mobileSignupBtn').addEventListener('click', () => { showModal(signupModal); closeMobileNav(); });
+        }
+    }
+
+    // Updates the chat area based on login state
+    function updateChatUI(user) {
+        if (user) {
+            chatArea.style.display = 'flex'; // Show chat (flex container)
+            chatLoginPrompt.style.display = 'none'; // Hide prompt
+            chatInputAvatar.src = user.photoURL || DEFAULT_AVATAR_URL; // Set input avatar
+            chatInputAvatar.onerror = () => { chatInputAvatar.src = DEFAULT_AVATAR_URL; };
+            fetchAndDisplayMessages(); // Fetch messages
+        } else {
+            chatArea.style.display = 'none'; // Hide chat
+            chatLoginPrompt.style.display = 'block'; // Show prompt
+            chatInputAvatar.src = DEFAULT_AVATAR_URL; // Reset input avatar
+            if (messagesListener) {
+                messagesListener(); // Unsubscribe from previous listener
+                messagesListener = null;
+            }
+            chatMessagesDiv.innerHTML = '<p class="loading-chat">Login to see chat history.</p>'; // Reset message area
+        }
+        chatSendBtn.disabled = !chatInput.value.trim(); // Initial send button state
+    }
+
+    // Updates the content of the settings modal if the user is logged in
+    function updateSettingsUI(user) {
+        if (user && settingsModal.style.display === 'flex') { // Only update if visible
+            settingsAvatarPreview.src = user.photoURL || DEFAULT_AVATAR_URL;
+            settingsAvatarPreview.onerror = () => { settingsAvatarPreview.src = DEFAULT_AVATAR_URL; };
+            settingsDisplayNameText.textContent = user.displayName || 'Not Set';
+        }
+    }
+
+    // --- Authentication Handlers ---
+
+    // Handles Email/Password Signup
+    function handleSignup(event) {
+        event.preventDefault();
+        clearErrorMessages();
+        const displayName = signupForm.signupName.value.trim();
+        const email = signupForm.signupEmail.value;
+        const password = signupForm.signupPassword.value;
+        const signupButton = signupForm.querySelector('button[type="submit"]');
+
+        // Validation
+        if (!displayName || displayName.length < 3) { signupError.textContent = 'Display name must be at least 3 characters.'; return; }
+        if (password.length < 6) { signupError.textContent = 'Password must be at least 6 characters.'; return; }
+
+        setButtonLoading(signupButton, true, 'Creating Account...');
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Set display name and default avatar *immediately* after creation
+                return userCredential.user.updateProfile({
+                    displayName: displayName,
+                    photoURL: DEFAULT_AVATAR_URL
+                });
+            })
+            .then(() => {
+                console.log('User signed up and profile updated.');
+                hideModal(signupModal); // Close modal on success
+                // Auth state listener will handle UI updates
+            })
+            .catch((error) => {
+                signupError.textContent = getFriendlyAuthErrorMessage(error);
+            })
+            .finally(() => {
+                setButtonLoading(signupButton, false); // Restore button state
+            });
+    }
+
+    // Handles Email/Password Login
+    function handleLogin(event) {
+        event.preventDefault();
+        clearErrorMessages();
+        const email = loginForm.loginEmail.value;
+        const password = loginForm.loginPassword.value;
+        const loginButton = loginForm.querySelector('button[type="submit"]');
+
+        setButtonLoading(loginButton, true, 'Logging In...');
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                console.log('User logged in.');
+                hideModal(loginModal); // Close modal on success
+                // Auth state listener handles UI updates
+            })
+            .catch((error) => {
+                loginError.textContent = getFriendlyAuthErrorMessage(error);
+            })
+            .finally(() => {
+                setButtonLoading(loginButton, false); // Restore button state
+            });
+    }
+
+    // Handles Google Sign-In Popup
+    function handleGoogleSignIn() {
+        clearErrorMessages();
+        const googleButtons = [googleSignInBtnLogin, googleSignInBtnSignup];
+        googleButtons.forEach(btn => setButtonLoading(btn, true)); // Disable buttons
+
+        auth.signInWithPopup(googleProvider)
+            .then((result) => {
+                console.log('Google Sign-In successful.');
+                 // Check if new user needs a default avatar (if Google didn't provide one)
+                 if (result.additionalUserInfo?.isNewUser && !result.user.photoURL) {
+                     result.user.updateProfile({ photoURL: DEFAULT_AVATAR_URL })
+                         .catch(err => console.error("Failed to set default avatar for new Google user:", err));
+                 }
+                 hideModal(loginModal); // Close modals
+                 hideModal(signupModal);
+                 // Auth state listener handles UI updates
+            }).catch((error) => {
+                const friendlyMsg = getFriendlyAuthErrorMessage(error);
+                if (friendlyMsg) { // Only show error if it's not a user cancellation
+                    loginError.textContent = friendlyMsg;
+                    signupError.textContent = friendlyMsg;
+                } else {
+                    console.log("Google Sign-in cancelled by user.");
+                }
+            })
+            .finally(() => {
+                googleButtons.forEach(btn => setButtonLoading(btn, false)); // Re-enable buttons
+            });
+    }
+
+    // Handles User Logout
+    function handleLogout() {
+        if (messagesListener) { // Unsubscribe from chat messages
+            messagesListener();
+            messagesListener = null;
+        }
+        auth.signOut()
+            .then(() => {
+                console.log('User signed out successfully.');
+                currentUser = null; // Clear local state
+                closeMobileNav(); // Close mobile nav if open
+                // Auth state listener handles UI updates
+            })
+            .catch((error) => {
+                console.error("Logout Error:", error);
+                alert('An error occurred while signing out.'); // Simple alert for logout error
+            });
+    }
+
+    // --- Avatar Upload Functionality ---
+
+    // Handles the avatar file upload process
+    function uploadAvatar(file) {
+        if (!currentUser || isUploadingAvatar) return; // Check login and upload status
+
+        // Basic client-side validation
+        if (!file.type.startsWith('image/')) { displayUploadStatus('Please select an image file.', true); return; }
+        if (file.size > 5 * 1024 * 1024) { displayUploadStatus('File too large (Max 5MB).', true); return; }
+
+        isUploadingAvatar = true;
+        displayUploadStatus('Uploading...'); // Show progress
+        setButtonLoading(changeAvatarBtn, true); // Disable button
+
+        const filePath = `avatars/${currentUser.uid}/${Date.now()}_${file.name}`; // Unique file path
+        const storageRef = storage.ref(filePath); // V8 storage ref syntax
+
+        // Upload file
+        storageRef.put(file)
+            .then(snapshot => snapshot.ref.getDownloadURL()) // Get download URL after upload
+            .then(downloadURL => {
+                // Update the user's profile in Firebase Auth
+                return auth.currentUser.updateProfile({ photoURL: downloadURL });
+            })
+            .then(() => {
+                console.log('Avatar updated successfully in Auth.');
+                displayUploadStatus('Avatar updated!', false); // Show success message
+
+                // Update UI immediately with the new URL
+                const newPhotoURL = auth.currentUser.photoURL;
+                userAvatarNav.src = newPhotoURL;
+                settingsAvatarPreview.src = newPhotoURL;
+                chatInputAvatar.src = newPhotoURL;
+
+                // Update local currentUser state for consistency
+                if (currentUser) { currentUser.photoURL = newPhotoURL; }
+
+                // Clear success message after a delay
+                setTimeout(clearUploadStatus, 3000);
+            })
+            .catch(error => {
+                console.error("Avatar Upload/Update Error:", error);
+                displayUploadStatus(getFriendlyAuthErrorMessage(error) || 'Upload failed.', true); // Show specific error
+            })
+            .finally(() => {
+                isUploadingAvatar = false; // Reset upload flag
+                setButtonLoading(changeAvatarBtn, false); // Re-enable button
+                avatarUploadInput.value = ''; // Clear the file input
+            });
+    }
+
+    // Helper to display status messages in the settings modal
+    function displayUploadStatus(message, isError = false) {
+        avatarUploadStatus.textContent = message;
+        avatarUploadStatus.className = `upload-status ${isError ? 'error' : 'success'}`;
+    }
+    // Helper to clear the upload status message
+    function clearUploadStatus() {
+        avatarUploadStatus.textContent = '';
+        avatarUploadStatus.className = 'upload-status';
+    }
 
     // --- Chat Functionality ---
+
+    // Fetches messages and sets up real-time listener
     function fetchAndDisplayMessages() {
-        if (messagesListener) messagesListener(); // Unsubscribe previous
+        if (messagesListener) messagesListener(); // Unsubscribe from previous listener
 
-        const messagesCol = db.collection('messages').orderBy('createdAt', 'asc').limit(100); // Limit history
+        const messagesQuery = db.collection('messages').orderBy('createdAt', 'asc').limit(50); // Get last 50 messages
 
-        chatMessagesDiv.innerHTML = '<div class="chat-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Loading Messages...</div>';
+        chatMessagesDiv.innerHTML = '<p class="loading-chat">Loading messages...</p>'; // Show loading state
 
-        let initialLoad = true; // Flag to check if it's the first batch
+        let initialDataLoaded = false; // Track initial load
 
-        messagesListener = messagesCol.onSnapshot(snapshot => {
-             const initialScrollHeight = chatMessagesDiv.scrollHeight;
-             const initialScrollTop = chatMessagesDiv.scrollTop;
-             const isScrolledToBottom = initialScrollHeight - initialScrollTop <= chatMessagesDiv.clientHeight + 50; // Check if user is near the bottom
+        messagesListener = messagesQuery.onSnapshot(snapshot => {
+            const wasNearBottom = chatMessagesDiv.scrollHeight - chatMessagesDiv.scrollTop <= chatMessagesDiv.clientHeight + 100; // Check scroll position BEFORE updates
 
             if (snapshot.empty) {
-                chatMessagesDiv.innerHTML = '<div class="chat-no-messages-placeholder">No messages yet. Start the conversation!</div>';
+                chatMessagesDiv.innerHTML = '<p class="no-messages">No messages yet. Say hello!</p>';
                 return;
             }
 
-            // Clear only if it's the first load, otherwise append smartly (more complex)
-            // For simplicity here, we redraw all on each update from the limited query
-             if(initialLoad) {
-                chatMessagesDiv.innerHTML = ''; // Clear placeholder on first data
-             }
+            if (!initialDataLoaded) {
+                chatMessagesDiv.innerHTML = ''; // Clear loading state only on first data
+                initialDataLoaded = true;
+            }
 
-
+            // Process changes efficiently
             snapshot.docChanges().forEach(change => {
-                 if (change.type === "added") {
-                     displayMessage(change.doc.id, change.doc.data());
-                 }
-                 // Handle 'modified' or 'removed' if needed (e.g., message editing/deletion)
-             });
+                const messageId = change.doc.id;
+                const messageData = change.doc.data();
+                const existingElement = document.getElementById(`msg-${messageId}`);
 
+                if (change.type === "added") {
+                    if (!existingElement) { // Add only if it doesn't exist
+                        displayMessage(messageId, messageData);
+                    }
+                } else if (change.type === "modified") {
+                    if (existingElement) { // Update existing message element
+                        const textElement = existingElement.querySelector('.message-text');
+                        const timestampElement = existingElement.querySelector('.message-timestamp');
+                        if (textElement) textElement.textContent = messageData.text;
+                        if (timestampElement) timestampElement.textContent = formatTimestamp(messageData.createdAt);
+                        // Potentially update avatar/name if those can change (less common)
+                    }
+                } else if (change.type === "removed") {
+                    if (existingElement) {
+                        existingElement.remove(); // Remove deleted message
+                    }
+                }
+            });
 
-            // Smart scrolling: Scroll down only if user was already at the bottom or it's the initial load
-             if (initialLoad || isScrolledToBottom) {
-                  chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
-             }
-
-             initialLoad = false; // Mark initial load as complete
+            // Scroll to bottom only if user was near bottom before update, or on initial load
+            if (initialDataLoaded && wasNearBottom) {
+                 // Use setTimeout to ensure DOM has updated after adding messages
+                 setTimeout(() => { chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; }, 0);
+            } else if (!initialDataLoaded && chatMessagesDiv.innerHTML !== ''){ // Scroll on very first load
+                 setTimeout(() => { chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; }, 0);
+            }
 
 
         }, error => {
             console.error("Error fetching messages: ", error);
-            chatMessagesDiv.innerHTML = '<div class="chat-error-message"><i class="fas fa-exclamation-triangle"></i> Could not load messages.</div>';
+            chatMessagesDiv.innerHTML = '<p class="error-message">Could not load messages. Please try again later.</p>';
+            messagesListener = null; // Stop listening on error
         });
     }
 
-    // --- Rewritten displayMessage function ---
+    // Creates and appends a single chat message element
     function displayMessage(id, message) {
-         // Check if message element already exists (to avoid duplicates on redraws)
-         if (document.getElementById(`msg-${id}`)) {
-             return;
-         }
-
-        const isCurrentUser = currentUser && message.userId === currentUser.uid;
+        const isSelf = currentUser && message.userId === currentUser.uid;
 
         const wrapper = document.createElement('div');
-        wrapper.id = `msg-${id}`; // Add ID for potential updates/removal
-        wrapper.classList.add('message-wrapper', isCurrentUser ? 'message-self' : 'message-other');
-        wrapper.setAttribute('data-aos', isCurrentUser ? 'fade-left' : 'fade-right'); // Add AOS effect
-         wrapper.setAttribute('data-aos-duration', '300');
-         wrapper.setAttribute('data-aos-offset', '0'); // Trigger immediately
+        wrapper.id = `msg-${id}`;
+        wrapper.className = `chat-message ${isSelf ? 'chat-message-self' : 'chat-message-other'}`;
 
+        const avatar = document.createElement('img');
+        avatar.className = 'chat-avatar';
+        avatar.src = message.userPhotoURL || DEFAULT_AVATAR_URL;
+        avatar.alt = 'Avatar';
+        avatar.onerror = () => { avatar.src = DEFAULT_AVATAR_URL; };
 
-        const avatarImg = document.createElement('img');
-        avatarImg.src = message.userPhotoURL || DEFAULT_AVATAR_URL;
-        avatarImg.alt = `${message.userName || 'User'}'s avatar`;
-        avatarImg.classList.add('chat-avatar');
-        avatarImg.onerror = () => { avatarImg.src = DEFAULT_AVATAR_URL; }; // Fallback
+        const content = document.createElement('div');
+        content.className = 'message-content';
 
-        const bubble = document.createElement('div');
-        bubble.classList.add('message-bubble');
-
-        if (!isCurrentUser) {
-            const usernameStrong = document.createElement('strong');
-            usernameStrong.classList.add('message-username');
-            usernameStrong.textContent = message.userName || 'Anonymous';
-            bubble.appendChild(usernameStrong);
+        if (!isSelf) {
+            const username = document.createElement('strong');
+            username.className = 'message-username';
+            username.textContent = message.userName || 'Anonymous';
+            content.appendChild(username);
         }
 
-        const textP = document.createElement('p');
-        textP.classList.add('message-text');
-        textP.textContent = message.text; // Use textContent for security (like escapeHTML)
-        bubble.appendChild(textP);
+        const text = document.createElement('p');
+        text.className = 'message-text';
+        text.textContent = message.text; // Use textContent to prevent XSS
+        content.appendChild(text);
 
-        const timestampSpan = document.createElement('span');
-        timestampSpan.classList.add('message-timestamp');
-        timestampSpan.textContent = formatTimestamp(message.createdAt);
-        bubble.appendChild(timestampSpan);
+        const timestamp = document.createElement('span');
+        timestamp.className = 'message-timestamp';
+        timestamp.textContent = formatTimestamp(message.createdAt);
+        content.appendChild(timestamp);
 
-        // Assemble the message structure
-        wrapper.appendChild(avatarImg);
-        wrapper.appendChild(bubble);
+        // Append elements in correct order based on sender
+        if (isSelf) {
+            wrapper.appendChild(content);
+            wrapper.appendChild(avatar);
+        } else {
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(content);
+        }
 
-         // Append and potentially trigger AOS refresh for the new element
-         chatMessagesDiv.appendChild(wrapper);
-         // AOS might pick it up automatically, but can force refresh if needed:
-         // if (typeof AOS !== 'undefined') { AOS.refreshHard([wrapper]); }
-
+        chatMessagesDiv.appendChild(wrapper);
     }
 
+    // Handles sending a new chat message
     function handleSendMessage(event) {
         event.preventDefault();
         const messageText = chatInput.value.trim();
+        chatError.textContent = ''; // Clear previous errors
 
-        if (!messageText || !currentUser) return;
+        if (!messageText || !currentUser) return; // Basic validation
 
-         chatError.textContent = ''; // Clear previous errors
-         chatSendBtn.disabled = true; // Disable temporarily
+        setButtonLoading(chatSendBtn, true); // Disable send button
 
+        // Add message to Firestore
         db.collection('messages').add({
             text: messageText,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(), // Use server time
             userId: currentUser.uid,
-            // Store current display name and photo URL at time of sending
-            userName: currentUser.displayName || 'User',
+            userName: currentUser.displayName || 'User', // Store current profile info
             userPhotoURL: currentUser.photoURL || DEFAULT_AVATAR_URL
         })
         .then(() => {
-            console.log("Message sent!");
-            chatInput.value = ''; // Clear input
-             // Listener will display the message
-             // Scroll to bottom after sending
-             chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+            chatInput.value = ''; // Clear input field
+            // Firestore listener will add the message to the UI
+            // Scroll down after a short delay to ensure DOM update
+            setTimeout(() => { chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; }, 50);
         })
         .catch((error) => {
             console.error("Error sending message: ", error);
-            chatError.textContent = 'Failed to send message.'; // Show error
+            chatError.textContent = 'Failed to send message.'; // Show user-friendly error
         })
         .finally(() => {
-            chatSendBtn.disabled = !chatInput.value.trim(); // Re-evaluate disabled state
+            setButtonLoading(chatSendBtn, false); // Re-enable send button
+            chatSendBtn.disabled = !chatInput.value.trim(); // Ensure correct state based on input
         });
     }
 
     // --- Event Listeners Setup ---
 
     // Navbar Scroll Effect
-     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) { // Add class after scrolling 50px
-             document.body.classList.add('scrolled');
-        } else {
-             document.body.classList.remove('scrolled');
-        }
-     });
+    window.addEventListener('scroll', () => {
+        body.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true }); // Improve scroll performance
 
-
-    // Auth Buttons & Modals
+    // Authentication Buttons & Modals
     loginBtn.addEventListener('click', () => showModal(loginModal));
     signupBtn.addEventListener('click', () => showModal(signupModal));
-    logoutBtn.addEventListener('click', handleLogout);
-    settingsBtn.addEventListener('click', () => {
+    logoutBtn.addEventListener('click', handleLogout); // Listener for desktop logout
+    settingsBtn.addEventListener('click', () => { // Listener for desktop settings icon
         if (currentUser) {
-            updateSettingsUI(currentUser); // Populate settings modal before showing
+            updateSettingsUI(currentUser);
             showModal(settingsModal);
         }
-     });
+    });
 
-    // Close Modal Buttons
+    // Modal Close Buttons
     closeLogin.addEventListener('click', () => hideModal(loginModal));
     closeSignup.addEventListener('click', () => hideModal(signupModal));
     closeSettings.addEventListener('click', () => hideModal(settingsModal));
 
-
-    // Close modal on outside click
+    // Close Modals on Backdrop Click
     window.addEventListener('click', (event) => {
         if (event.target === loginModal) hideModal(loginModal);
         if (event.target === signupModal) hideModal(signupModal);
-         if (event.target === settingsModal) hideModal(settingsModal);
+        if (event.target === settingsModal) hideModal(settingsModal);
     });
 
-    // Switch Modals
+    // Switch Between Login/Signup Modals
     switchToSignup.addEventListener('click', (e) => { e.preventDefault(); hideModal(loginModal); showModal(signupModal); });
     switchToLogin.addEventListener('click', (e) => { e.preventDefault(); hideModal(signupModal); showModal(loginModal); });
 
-    // Chat Login/Signup Prompt Buttons
-    chatLoginLinkBtn.addEventListener('click', () => showModal(loginModal));
-    chatSignupLinkBtn.addEventListener('click', () => showModal(signupModal));
+    // Chat Prompt Links
+    chatLoginLink.addEventListener('click', (e) => { e.preventDefault(); showModal(loginModal); });
+    chatSignupLink.addEventListener('click', (e) => { e.preventDefault(); showModal(signupModal); });
 
     // Form Submissions
     loginForm.addEventListener('submit', handleLogin);
     signupForm.addEventListener('submit', handleSignup);
 
-    // Google Sign-In
+    // Google Sign-In Buttons
     googleSignInBtnLogin.addEventListener('click', handleGoogleSignIn);
     googleSignInBtnSignup.addEventListener('click', handleGoogleSignIn);
 
-    // Chat Form
-    chatForm.addEventListener('submit', handleSendMessage);
-    // Enable/disable send button based on input
-     chatInput.addEventListener('input', () => {
-        chatSendBtn.disabled = !chatInput.value.trim();
-    });
-
-    // Settings - Avatar Upload
-    changeAvatarBtn.addEventListener('click', () => avatarUploadInput.click()); // Trigger hidden file input
+    // Settings Modal - Avatar Upload
+    changeAvatarBtn.addEventListener('click', () => avatarUploadInput.click()); // Trigger file input
     avatarUploadInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
-            uploadAvatar(file);
+            uploadAvatar(file); // Call upload function
         }
     });
 
-    // Mobile Menu
-    mobileMenuToggle.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
-        const icon = mobileMenuToggle.querySelector('i');
-        icon.classList.toggle('fa-bars');
-        icon.classList.toggle('fa-times');
+    // Chat Form
+    chatForm.addEventListener('submit', handleSendMessage);
+    // Enable/disable send button based on input content
+    chatInput.addEventListener('input', () => {
+        chatSendBtn.disabled = !chatInput.value.trim();
     });
 
-     // Close mobile nav function
-     function closeMobileNav() {
-        if (mobileNav.classList.contains('active')) {
-             mobileNav.classList.remove('active');
-             mobileMenuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-         }
-     }
+    // Mobile Menu Toggle
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+        mobileMenuToggle.querySelector('i').classList.toggle('fa-bars');
+        mobileMenuToggle.querySelector('i').classList.toggle('fa-times');
+    });
 
-    // Close mobile menu when a link inside it is clicked
+    // Mobile Menu Links (Close menu on click)
     mobileNav.addEventListener('click', (e) => {
-        // Close if a link (A) or a button initiating an action (like login/signup) is clicked
-        if (e.target.tagName === 'A' || (e.target.tagName === 'BUTTON' && e.target.id !== 'mobileLogoutBtn')) { // Don't close for logout immediately
+        // Close if a direct link or a button that opens a modal is clicked
+        if (e.target.tagName === 'A' || (e.target.tagName === 'BUTTON' && !e.target.id.includes('Logout'))) {
             closeMobileNav();
         }
     });
-     // Mobile settings button
+    // Mobile settings button listener
     mobileSettingsBtn.addEventListener('click', (e) => {
-         e.preventDefault();
-         if (currentUser) {
+        e.preventDefault();
+        if (currentUser) {
             updateSettingsUI(currentUser);
             showModal(settingsModal);
-         }
-         closeMobileNav();
-     });
+        }
+        closeMobileNav();
+    });
 
 
     // --- Authentication State Observer ---
+    // This is the core listener that reacts to login/logout events
     auth.onAuthStateChanged(user => {
-        console.log("Auth state changed:", user);
-         if (user) {
-            // Ensure the user object has expected properties with fallbacks
-             currentUser = {
+        console.log("Auth state changed. User:", user ? user.uid : 'None');
+        if (user) {
+            // User is signed in. Create/Update the local currentUser object.
+            currentUser = {
                 uid: user.uid,
                 email: user.email,
-                displayName: user.displayName || 'User', // Fallback
-                photoURL: user.photoURL || DEFAULT_AVATAR_URL // Fallback
+                displayName: user.displayName || 'User', // Provide fallback
+                photoURL: user.photoURL || DEFAULT_AVATAR_URL // Provide fallback
             };
-         } else {
+            // If displayName or photoURL were just updated, they might be reflected here
+            // or might need a slight delay/refresh, but this covers most cases.
+        } else {
+            // User is signed out.
             currentUser = null;
-         }
+        }
 
+        // Update all relevant parts of the UI based on the new auth state
         updateNavUI(currentUser);
         updateChatUI(currentUser);
-        updateSettingsUI(currentUser); // Update settings modal preview if it happens to be open
+        updateSettingsUI(currentUser); // Update settings modal preview if open
 
     });
 
-     // --- Footer Year ---
-    if(currentYearSpan) {
+    // --- Footer Year ---
+    if (currentYearSpan) {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 
+    // --- Initial Checks ---
+    // The onAuthStateChanged listener handles the initial UI setup.
+    console.log("Landing Page Initialized.");
+
 }); // End DOMContentLoaded
-     
