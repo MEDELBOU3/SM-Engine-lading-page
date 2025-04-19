@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM Engine - Web-Based 3D Editor</title> <!-- Updated -->
     <link rel="stylesheet" href="style.css">
-  <!-- Google Fonts -->
+   <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 </head>
 <body>
    <!-- Header -->
-    <header class="sticky-top shadow-lg">
+    <header class="sticky-top shadow-sm"> <!-- Reduced shadow slightly -->
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a href="#" class="navbar-brand logo d-flex align-items-center gap-2">
@@ -40,22 +40,37 @@
                             <button class="btn btn-outline-primary btn-sm w-100" id="loginBtnMobile">Log In</button>
                             <button class="btn btn-primary btn-sm w-100" id="signupBtnMobile">Sign Up</button>
                         </li>
+                         <!-- User Menu (Mobile) - Placed inside for better collapse behavior -->
+                         <li class="nav-item dropdown d-lg-none user-menu" id="userMenuMobileContainer">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatarMobile" class="user-avatar rounded-circle me-2">
+                                <span class="user-name me-1" id="menuUserNameMobile">User</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMobile">
+                                <li><a class="dropdown-item" href="#" id="profileMenuItemMobile"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#" id="settingsMenuItemMobile"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItemMobile"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
+                            </ul>
+                        </li>
                     </ul>
+                    <!-- Desktop Auth Buttons -->
                     <div class="auth-buttons d-none d-lg-flex gap-2 ms-lg-3">
                         <button class="btn btn-outline-primary" id="loginBtn">Log In</button>
                         <button class="btn btn-primary" id="signupBtn">Sign Up</button>
                     </div>
-                    <div class="user-menu ms-lg-3" id="userMenu">
-                        <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatar" class="user-avatar rounded-circle me-2">
-                                <span class="user-name me-1" id="menuUserName">User</span>
+                     <!-- Desktop User Menu -->
+                    <div class="user-menu d-none d-lg-block ms-lg-3" id="userMenuDesktopContainer">
+                         <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdownDesktop" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatarDesktop" class="user-avatar rounded-circle me-2">
+                                <span class="user-name me-1" id="menuUserNameDesktop">User</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#" id="profileMenuItem"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#" id="settingsMenuItem"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
+                                <li><a class="dropdown-item" href="#" id="profileMenuItemDesktop"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#" id="settingsMenuItemDesktop"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItem"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItemDesktop"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
                             </ul>
                         </div>
                     </div>
@@ -83,7 +98,7 @@
                     </div>
                     <div class="col-lg-5 d-none d-lg-block hero-visual animate-fade-in-right" style="animation-delay: 0.3s;">
                         <!-- Placeholder for a 3D graphic or dynamic visual -->
-                         <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/wNWwMYHP4rqMfO6u/image.jpg" alt="3D Creation Visual" class="img-fluid rounded-3 shadow-lg">
+                         <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/Lkl3oMTSzpr8yTJ2/image.jpg" alt="3D Creation Visual" class="img-fluid rounded-3 shadow-lg">
                     </div>
                 </div>
             </div>
@@ -100,42 +115,42 @@
                     <!-- Feature Cards -->
                     <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-cubes"></i></div>
+                            <div class="feature-icon"><i class="fas fa-cubes"></i></div>
                             <h3 class="h5 fw-semibold mb-2">Hyper-Realistic Modeling</h3>
                             <p>Intuitive sculpting, procedural generation, and PBR material workflow.</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-gamepad-alt"></i></div>
+                            <div class="feature-icon"><i class="fas fa-gamepad-alt"></i></div>
                             <h3 class="h5 fw-semibold mb-2">Integrated Game Engine</h3>
                             <p>Seamlessly transition from asset creation to interactive game development.</p>
                         </div>
                     </div>
                      <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-users"></i></div>
+                            <div class="feature-icon"><i class="fas fa-users"></i></div>
                             <h3 class="h5 fw-semibold mb-2">Collaborative Cloud</h3>
                             <p>Real-time project sharing, version control, and community asset marketplace.</p>
                         </div>
                     </div>
                      <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-bolt"></i></div>
+                            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
                             <h3 class="h5 fw-semibold mb-2">Real-time Ray Tracing</h3>
                             <p>Achieve cinematic lighting and reflections instantly within the editor.</p>
                         </div>
                     </div>
                      <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-vr-cardboard"></i></div>
+                            <div class="feature-icon"><i class="fas fa-vr-cardboard"></i></div>
                             <h3 class="h5 fw-semibold mb-2">VR/AR Native Support</h3>
                             <p>Build and test immersive experiences directly for leading XR platforms.</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4 d-flex">
                         <div class="feature-card flex-fill">
-                            <div class="feature-icon mb-3"><i class="fas fa-code-branch"></i></div>
+                            <div class="feature-icon"><i class="fas fa-code-branch"></i></div>
                             <h3 class="h5 fw-semibold mb-2">Extensible Scripting API</h3>
                             <p>Customize workflows and create powerful tools with Python or C++.</p>
                         </div>
@@ -149,14 +164,14 @@
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="display-5 fw-bold">Creator Showcase</h2>
-                    <p class="lead text-light-emphasis mx-auto" style="max-width: 600px;">Incredible worlds and assets brought to life with 3D Craft.</p>
+                    <p class="lead text-light-emphasis mx-auto" style="max-width: 600px;">Incredible worlds and assets brought to life with SM Engine.</p>
                 </div>
                 <div class="row g-4">
                     <!-- Showcase Cards -->
                      <div class="col-md-6 col-lg-4">
                         <div class="showcase-card card text-white border-0 overflow-hidden">
                             <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/BedHKXq3xm4pvYYN/image.jpg" class="card-img" alt="Project 1">
-                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                            <div class="card-img-overlay">
                                 <h5 class="card-title fw-bold">Cyberpunk Alley</h5>
                                 <p class="card-text small">Atmospheric scene utilizing advanced lighting and volumetric effects.</p>
                             </div>
@@ -165,7 +180,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="showcase-card card text-white border-0 overflow-hidden">
                             <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/adWi7x59YabWOLgr/image.jpg" class="card-img" alt="Project 2">
-                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                            <div class="card-img-overlay">
                                 <h5 class="card-title fw-bold">Enchanted Forest</h5>
                                 <p class="card-text small">Lush environment created with procedural foliage and dynamic weather.</p>
                             </div>
@@ -174,7 +189,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="showcase-card card text-white border-0 overflow-hidden">
                             <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/Mod3EAiHAyyWcpXt/image.jpg" class="card-img" alt="Project 3">
-                            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                            <div class="card-img-overlay">
                                 <h5 class="card-title fw-bold">Mech Bay Concept</h5>
                                 <p class="card-text small">Hard-surface model showcase featuring detailed texturing and PBR materials.</p>
                             </div>
@@ -189,11 +204,11 @@
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="display-5 fw-bold">Connect & Collaborate</h2>
-                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Join the global 3D Craft network. Share knowledge, find collaborators, and get feedback.</p>
+                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Join the global SM Engine network. Share knowledge, find collaborators, and get feedback.</p>
                 </div>
 
-                <!-- Login Prompt -->
-                <div class="login-prompt text-center p-5 rounded-3 mb-4" id="communityLoginPrompt">
+                <!-- Login Prompt (Initially visible, hidden by JS if logged in) -->
+                <div class="login-prompt text-center p-5 rounded-3 mb-4 " id="communityLoginPrompt">
                     <i class="fas fa-comments fa-3x text-primary mb-3"></i>
                     <h3 class="mb-3">Enter the Creator Hub</h3>
                     <p class="text-muted mb-4">Log in or sign up to join discussions, share your work, and connect.</p>
@@ -202,45 +217,49 @@
                     </button>
                 </div>
 
-                <!-- Community Hub Container -->
-                <div class="community-container shadow-lg rounded-3 overflow-hidden" id="communityContainer">
+                <!-- Community Hub Container (Initially hidden, shown by JS if logged in) -->
+                <div class="community-container shadow-lg rounded-3 overflow-hidden d-none" id="communityContainer">
                     <!-- Header -->
                     <div class="community-header d-flex justify-content-between align-items-center p-3">
                         <h4 class="mb-0 d-flex align-items-center gap-2"><i class="fas fa-users-cog"></i> Creator Hub</h4>
-                        <button class="btn btn-sm btn-icon" id="communitySettingsBtn" aria-label="Community Settings">
+                        <button class="btn btn-sm btn-icon btn-outline-secondary" id="communitySettingsBtn" aria-label="Community Settings" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Community Settings (Placeholder)">
                             <i class="fas fa-cog"></i>
                         </button>
                     </div>
 
                     <!-- Body (Sidebar + Chat) -->
-                    <div class="community-body d-flex">
+                    <div class="community-body d-flex h-100">
                         <!-- Sidebar -->
-                        <div class="community-sidebar d-flex flex-column p-3">
-                            <h5 class="sidebar-title text-muted small text-uppercase mb-2 px-2">Channels</h5>
-                            <nav class="nav flex-column nav-pills" id="channelList">
-                                <a class="nav-link sidebar-item active" href="#" data-channel="general"><i class="fas fa-globe-americas fa-fw me-2"></i>General</a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="modeling"><i class="fas fa-cube fa-fw me-2"></i>Modeling</a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="gaming"><i class="fas fa-gamepad fa-fw me-2"></i>Gaming</a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="design"><i class="fas fa-palette fa-fw me-2"></i>Design</a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="scripting"><i class="fas fa-code fa-fw me-2"></i>Scripting</a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="showcase-feedback"><i class="fas fa-camera-retro fa-fw me-2"></i>Showcase</a>
+                        <div class="community-sidebar d-flex flex-column ">
+                             <div class="p-3 border-bottom border-dark"> <!-- Optional: Header for Sidebar -->
+                                <h5 class="sidebar-title text-muted small text-uppercase mb-0">Channels</h5>
+                             </div>
+                             <nav class="nav flex-column nav-pills p-3 flex-grow-1" id="channelList">
+                                <a class="nav-link sidebar-item active" href="#" data-channel="general"><i class="fas fa-globe-americas fa-fw"></i><span>General</span></a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="modeling"><i class="fas fa-cube fa-fw"></i><span>Modeling</span></a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="gaming"><i class="fas fa-gamepad fa-fw"></i><span>Gaming</span></a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="design"><i class="fas fa-palette fa-fw"></i><span>Design</span></a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="scripting"><i class="fas fa-code fa-fw"></i><span>Scripting</span></a>
+                                <a class="nav-link sidebar-item" href="#" data-channel="showcase-feedback"><i class="fas fa-camera-retro fa-fw"></i><span>Showcase</span></a>
                             </nav>
-                            <div class="mt-auto p-2 text-center text-muted small">
+                            <div class="p-2 text-center text-muted small border-top border-dark"> <!-- Optional: Footer for Sidebar -->
                                 <i class="fas fa-wifi"></i> Connected
                             </div>
                         </div>
 
                         <!-- Chat Area -->
                         <div class="community-chat d-flex flex-column flex-grow-1">
-                            <!-- Messages -->
-                            <div class="chat-messages flex-grow-1 p-3" id="chatMessages">
+                            <!-- Messages Area -->
+                            <div class="chat-messages flex-grow-1" id="chatMessages">
                                 <!-- Messages will be loaded here -->
-                                <div class="text-center text-muted p-5">Loading messages...</div>
+                                <div class="text-center text-muted p-5 h-100 d-flex align-items-center justify-content-center">
+                                    <div><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading messages...</div>
+                                </div>
                             </div>
-                            <!-- Input -->
+                            <!-- Message Input Area -->
                             <div class="chat-input d-flex align-items-center p-3 gap-2">
-                                <input type="text" class="form-control" placeholder="Type your message in #general..." id="messageInput" aria-label="Chat message input">
-                                <button class="btn btn-primary btn-icon" id="sendMessageBtn" aria-label="Send message">
+                                <input type="text" class="form-control" placeholder="Type your message in #general..." id="messageInput" aria-label="Chat message input" autocomplete="off">
+                                <button class="btn btn-primary btn-icon flex-shrink-0" id="sendMessageBtn" aria-label="Send message">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
                             </div>
@@ -258,7 +277,7 @@
                 <div class="col-lg-4 col-md-6">
                     <h4 class="logo d-flex align-items-center gap-2 mb-3">
                         <i class="fas fa-cubes fa-fw"></i>
-                        <span>3D Craft</span>
+                        <span>SM Engine</span>
                     </h4>
                     <p class="text-light-emphasis pe-lg-4">The next generation suite for 3D modeling, game development, and digital creation. Empowering creators worldwide.</p>
                 </div>
@@ -331,18 +350,18 @@
                             <form id="loginForm">
                                 <div class="mb-3">
                                     <label for="loginEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="loginEmail" required aria-describedby="emailHelp">
+                                    <input type="email" class="form-control" id="loginEmail" required aria-describedby="emailHelp" autocomplete="email">
                                 </div>
                                 <div class="mb-3">
                                     <label for="loginPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="loginPassword" required>
+                                    <input type="password" class="form-control" id="loginPassword" required autocomplete="current-password">
                                 </div>
+                                <div id="loginError" class="alert alert-danger mt-3 small d-none p-2"></div>
                                 <button type="submit" class="btn btn-primary w-100 mb-3">Log In</button>
-                                <div class="text-center text-muted mb-3 or-divider"><span>OR</span></div>
+                                <div class="or-divider"><span>OR</span></div>
                                 <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleLoginBtn">
                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
                                 </button>
-                                <div id="loginError" class="text-danger mt-3 small d-none"></div>
                             </form>
                         </div>
                         <!-- Signup Form -->
@@ -350,23 +369,23 @@
                             <form id="signupForm">
                                 <div class="mb-3">
                                     <label for="signupName" class="form-label">Display Name</label>
-                                    <input type="text" class="form-control" id="signupName" required>
+                                    <input type="text" class="form-control" id="signupName" required autocomplete="nickname">
                                 </div>
                                 <div class="mb-3">
                                     <label for="signupEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="signupEmail" required>
+                                    <input type="email" class="form-control" id="signupEmail" required autocomplete="email">
                                 </div>
                                 <div class="mb-3">
                                     <label for="signupPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="signupPassword" required minlength="6">
+                                    <input type="password" class="form-control" id="signupPassword" required minlength="6" autocomplete="new-password">
                                     <div class="form-text">Minimum 6 characters</div>
                                 </div>
+                                 <div id="signupError" class="alert alert-danger mt-3 small d-none p-2"></div>
                                 <button type="submit" class="btn btn-primary w-100 mb-3">Sign Up</button>
-                                <div class="text-center text-muted mb-3 or-divider"><span>OR</span></div>
+                                <div class="or-divider"><span>OR</span></div>
                                 <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleSignupBtn">
                                      <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
                                 </button>
-                                <div id="signupError" class="text-danger mt-3 small d-none"></div>
                             </form>
                         </div>
                     </div>
@@ -386,20 +405,20 @@
                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center pt-2 pb-4 px-4">
-                    <h2 class="modal-title mb-1" id="profileModalName">User Name</h2>
+                    <h2 class="modal-title mb-1 fw-bold" id="profileModalName">User Name</h2>
                     <p class="text-muted mb-3" id="profileModalEmail">user@example.com</p>
                     <p class="mb-4" id="profileModalBio">No bio provided yet. Edit your profile in settings!</p>
                     <div class="d-flex justify-content-center gap-4 mb-4">
                         <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statProjects">12</div>
+                            <div class="fs-4 fw-bold" id="statProjects">--</div>
                             <div class="small text-muted">Projects</div>
                         </div>
                          <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statFollowers">145</div>
+                            <div class="fs-4 fw-bold" id="statFollowers">--</div>
                             <div class="small text-muted">Followers</div>
                         </div>
                          <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statFollowing">88</div>
+                            <div class="fs-4 fw-bold" id="statFollowing">--</div>
                             <div class="small text-muted">Following</div>
                         </div>
                     </div>
@@ -419,10 +438,10 @@
                 </div>
                 <div class="modal-body p-4">
                     <form id="settingsForm">
-                        <div class="alert alert-success d-none" role="alert" id="settingsSuccess">
+                        <div class="alert alert-success d-none p-2 mb-3" role="alert" id="settingsSuccess">
                           Profile updated successfully!
                         </div>
-                         <div class="alert alert-danger d-none" role="alert" id="settingsError">
+                         <div class="alert alert-danger d-none p-2 mb-3" role="alert" id="settingsError">
                           An error occurred. Please try again.
                         </div>
                         <div class="row mb-4 align-items-center">
@@ -430,28 +449,30 @@
                                 <img src="placeholder-avatar.png" alt="Avatar Preview" id="avatarPreview" class="settings-avatar-preview rounded-circle">
                             </div>
                             <div class="col">
-                                <label for="avatarInput" class="form-label">Profile Picture</label>
+                                <label for="avatarInput" class="form-label mb-1">Profile Picture</label>
                                 <div class="d-flex gap-2">
-                                    <input type="file" id="avatarInput" accept="image/*" class="d-none">
+                                    <input type="file" id="avatarInput" accept="image/jpeg, image/png, image/gif" class="d-none">
                                     <button type="button" class="btn btn-secondary btn-sm" id="uploadAvatarBtn"><i class="fas fa-upload me-1"></i> Upload New</button>
                                     <button type="button" class="btn btn-outline-danger btn-sm" id="removeAvatarBtn"><i class="fas fa-trash-alt me-1"></i> Remove</button>
                                 </div>
-                                <div class="form-text">Upload a JPG, PNG, or GIF. Max size 2MB.</div>
+                                <div class="form-text mt-1">Upload a JPG, PNG, or GIF. Max size 2MB.</div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="settingsName" class="form-label">Display Name</label>
-                            <input type="text" class="form-control" id="settingsName" required>
+                            <input type="text" class="form-control" id="settingsName" required maxlength="50">
                         </div>
                          <div class="mb-3">
                             <label for="settingsEmail" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="settingsEmail" disabled readonly>
-                            <div class="form-text">Email cannot be changed here.</div>
+                            <div class="form-text">Email cannot be changed.</div>
                         </div>
                         <div class="mb-3">
                             <label for="settingsBio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="settingsBio" rows="3" placeholder="Tell us a bit about yourself..."></textarea>
+                            <textarea class="form-control" id="settingsBio" rows="3" placeholder="Tell us a bit about yourself..." maxlength="200"></textarea>
+                             <div class="form-text text-end"><span id="bioCharCount">0</span> / 200</div>
                         </div>
+                        <hr class="my-4">
                         <div class="text-end">
                              <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancel</button>
                              <button type="submit" class="btn btn-primary" id="saveSettingsBtn">
@@ -466,8 +487,7 @@
     </div>
 
 
-    <!-- Firebase SDK -->
-    <!-- IMPORTANT: Use the latest compatible versions -->
+    <!-- Firebase SDK (Use compatible versions) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -475,7 +495,6 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 
 <!-- Your Custom JavaScript -->
 <script src="app.js"></script>
