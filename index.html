@@ -3,501 +3,1864 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SM Engine - Web-Based 3D Editor</title> <!-- Updated -->
-    <link rel="stylesheet" href="style.css">
-   <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <title>Super Mario Adventure - Deluxe Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #87CEEB 100%);
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #87CEEB 100%); }
+            50% { background: linear-gradient(135deg, #8B4513 0%, #CD853F 50%, #F4A460 100%); }
+        }
+        
+        #gameContainer {
+            border: 6px solid #8B4513;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(139, 69, 19, 0.3);
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            display: block;
+            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 60%, #228B22 85%, #8B4513 100%);
+        }
+        
+        #gameUI {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #FFD700;
+        }
+        
+        #powerUpStatus {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #FFD700;
+            font-size: 12px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            z-index: 10;
+            background: rgba(139, 69, 19, 0.8);
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #FF6B6B;
+        }
+        
+        #instructions {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            font-size: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #FFD700;
+        }
+        
+        #titleScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
+            background-size: 400% 400%;
+            animation: gradientFlow 4s ease infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: white;
+            text-align: center;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        #titleScreen h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+            animation: titleBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        #titleScreen .subtitle {
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        #titleScreen .start-button {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: buttonPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes buttonPulse {
+            0%, 100% { box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6); }
+        }
+        
+        #titleScreen .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+        }
+        
+        .floating-text {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 50;
+            animation: floatUp 2s ease-out forwards;
+        }
+        
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+    </style>
 </head>
 <body>
-   <!-- Header -->
-    <header class="sticky-top shadow-sm"> <!-- Reduced shadow slightly -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a href="#" class="navbar-brand logo d-flex align-items-center gap-2">
-                    <i class="fas fa-cubes fa-fw"></i>
-                    <span>SM Engine</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#community">Community</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#showcase">Showcase</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                        <li class="nav-item d-lg-none"><hr class="dropdown-divider"></li>
-                        <li class="nav-item auth-buttons-inline d-lg-none d-flex gap-2 mb-2">
-                            <button class="btn btn-outline-primary btn-sm w-100" id="loginBtnMobile">Log In</button>
-                            <button class="btn btn-primary btn-sm w-100" id="signupBtnMobile">Sign Up</button>
-                        </li>
-                         <!-- User Menu (Mobile) - Placed inside for better collapse behavior -->
-                         <li class="nav-item dropdown d-lg-none user-menu" id="userMenuMobileContainer">
-                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatarMobile" class="user-avatar rounded-circle me-2">
-                                <span class="user-name me-1" id="menuUserNameMobile">User</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMobile">
-                                <li><a class="dropdown-item" href="#" id="profileMenuItemMobile"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#" id="settingsMenuItemMobile"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItemMobile"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <!-- Desktop Auth Buttons -->
-                    <div class="auth-buttons d-none d-lg-flex gap-2 ms-lg-3">
-                        <button class="btn btn-outline-primary" id="loginBtn">Log In</button>
-                        <button class="btn btn-primary" id="signupBtn">Sign Up</button>
-                    </div>
-                     <!-- Desktop User Menu -->
-                    <div class="user-menu d-none d-lg-block ms-lg-3" id="userMenuDesktopContainer">
-                         <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdownDesktop" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="placeholder-avatar.png" alt="User Avatar" id="menuUserAvatarDesktop" class="user-avatar rounded-circle me-2">
-                                <span class="user-name me-1" id="menuUserNameDesktop">User</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
-                                <li><a class="dropdown-item" href="#" id="profileMenuItemDesktop"><i class="fas fa-user-circle fa-fw me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#" id="settingsMenuItemDesktop"><i class="fas fa-cog fa-fw me-2"></i>Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#" id="logoutMenuItemDesktop"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Log Out</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <button class="theme-toggle ms-3" id="themeToggle" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
+    <div id="gameContainer">
+        <div id="titleScreen">
+            <h1>🍄 SUPER MARIO ADVENTURE 🍄</h1>
+            <div class="subtitle">DELUXE EDITION WITH EPIC SOUNDTRACK</div>
+            <div style="margin: 20px 0; font-size: 10px; opacity: 0.8;">
+                🌟 Featuring: Dynamic Music • Power-ups • Multiple Levels • Boss Battles 🌟<br>
+                🎮 Enhanced Graphics • Particle Effects • Secret Areas • Bonus Stages 🎮
             </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-overlay"></div>
-            <div class="container position-relative">
-                <div class="row align-items-center min-vh-75">
-                    <div class="col-lg-7 hero-content text-center text-lg-start mb-5 mb-lg-0">
-                        <h1 class="display-3 fw-bolder mb-3 animate-fade-in-up">Forge Your Reality</h1>
-                        <p class="lead mb-4 animate-fade-in-up" style="animation-delay: 0.2s;">The ultimate creation suite for breathtaking 3D models, immersive game worlds, and collaborative development. Join the future of digital creation.</p>
-                        <div class="d-flex gap-3 justify-content-center justify-content-lg-start animate-fade-in-up" style="animation-delay: 0.4s;">
-                            <button class="btn btn-primary btn-lg px-4 py-2">Start Creating <i class="fas fa-arrow-right ms-2"></i></button>
-                            <button class="btn btn-outline-light btn-lg px-4 py-2">Watch Demo <i class="fas fa-play ms-2"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-lg-5 d-none d-lg-block hero-visual animate-fade-in-right" style="animation-delay: 0.3s;">
-                        <!-- Placeholder for a 3D graphic or dynamic visual -->
-                         <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/Lkl3oMTSzpr8yTJ2/image.jpg" alt="3D Creation Visual" class="img-fluid rounded-3 shadow-lg">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features py-5" id="features">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="display-5 fw-bold">Next-Gen Features</h2>
-                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Empowering tools designed for performance, flexibility, and stunning results.</p>
-                </div>
-                <div class="row g-4 justify-content-center">
-                    <!-- Feature Cards -->
-                    <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-cubes"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">Hyper-Realistic Modeling</h3>
-                            <p>Intuitive sculpting, procedural generation, and PBR material workflow.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-gamepad-alt"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">Integrated Game Engine</h3>
-                            <p>Seamlessly transition from asset creation to interactive game development.</p>
-                        </div>
-                    </div>
-                     <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-users"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">Collaborative Cloud</h3>
-                            <p>Real-time project sharing, version control, and community asset marketplace.</p>
-                        </div>
-                    </div>
-                     <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">Real-time Ray Tracing</h3>
-                            <p>Achieve cinematic lighting and reflections instantly within the editor.</p>
-                        </div>
-                    </div>
-                     <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-vr-cardboard"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">VR/AR Native Support</h3>
-                            <p>Build and test immersive experiences directly for leading XR platforms.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="feature-card flex-fill">
-                            <div class="feature-icon"><i class="fas fa-code-branch"></i></div>
-                            <h3 class="h5 fw-semibold mb-2">Extensible Scripting API</h3>
-                            <p>Customize workflows and create powerful tools with Python or C++.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Showcase Section -->
-        <section class="showcase py-5 bg-gradient-dark" id="showcase">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="display-5 fw-bold">Creator Showcase</h2>
-                    <p class="lead text-light-emphasis mx-auto" style="max-width: 600px;">Incredible worlds and assets brought to life with SM Engine.</p>
-                </div>
-                <div class="row g-4">
-                    <!-- Showcase Cards -->
-                     <div class="col-md-6 col-lg-4">
-                        <div class="showcase-card card text-white border-0 overflow-hidden">
-                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/BedHKXq3xm4pvYYN/image.jpg" class="card-img" alt="Project 1">
-                            <div class="card-img-overlay">
-                                <h5 class="card-title fw-bold">Cyberpunk Alley</h5>
-                                <p class="card-text small">Atmospheric scene utilizing advanced lighting and volumetric effects.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="showcase-card card text-white border-0 overflow-hidden">
-                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/adWi7x59YabWOLgr/image.jpg" class="card-img" alt="Project 2">
-                            <div class="card-img-overlay">
-                                <h5 class="card-title fw-bold">Enchanted Forest</h5>
-                                <p class="card-text small">Lush environment created with procedural foliage and dynamic weather.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="showcase-card card text-white border-0 overflow-hidden">
-                            <img src="https://assets.grok.com/users/86723b63-4667-4efa-a25c-3316e939a1b5/generated/Mod3EAiHAyyWcpXt/image.jpg" class="card-img" alt="Project 3">
-                            <div class="card-img-overlay">
-                                <h5 class="card-title fw-bold">Mech Bay Concept</h5>
-                                <p class="card-text small">Hard-surface model showcase featuring detailed texturing and PBR materials.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Community Section -->
-        <section class="community py-5" id="community">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="display-5 fw-bold">Connect & Collaborate</h2>
-                    <p class="lead text-muted mx-auto" style="max-width: 600px;">Join the global SM Engine network. Share knowledge, find collaborators, and get feedback.</p>
-                </div>
-
-                <!-- Login Prompt (Initially visible, hidden by JS if logged in) -->
-                <div class="login-prompt text-center p-5 rounded-3 mb-4 " id="communityLoginPrompt">
-                    <i class="fas fa-comments fa-3x text-primary mb-3"></i>
-                    <h3 class="mb-3">Enter the Creator Hub</h3>
-                    <p class="text-muted mb-4">Log in or sign up to join discussions, share your work, and connect.</p>
-                    <button class="btn btn-primary btn-lg" id="communityLoginBtn">
-                       <i class="fas fa-sign-in-alt me-2"></i> Access Community
-                    </button>
-                </div>
-
-                <!-- Community Hub Container (Initially hidden, shown by JS if logged in) -->
-                <div class="community-container shadow-lg rounded-3 overflow-hidden d-none" id="communityContainer">
-                    <!-- Header -->
-                    <div class="community-header d-flex justify-content-between align-items-center p-3">
-                        <h4 class="mb-0 d-flex align-items-center gap-2"><i class="fas fa-users-cog"></i> Creator Hub</h4>
-                        <button class="btn btn-sm btn-icon btn-outline-secondary" id="communitySettingsBtn" aria-label="Community Settings" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Community Settings (Placeholder)">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                    </div>
-
-                    <!-- Body (Sidebar + Chat) -->
-                    <div class="community-body d-flex h-100">
-                        <!-- Sidebar -->
-                        <div class="community-sidebar d-flex flex-column ">
-                             <div class="p-3 border-bottom border-dark"> <!-- Optional: Header for Sidebar -->
-                                <h5 class="sidebar-title text-muted small text-uppercase mb-0">Channels</h5>
-                             </div>
-                             <nav class="nav flex-column nav-pills p-3 flex-grow-1" id="channelList">
-                                <a class="nav-link sidebar-item active" href="#" data-channel="general"><i class="fas fa-globe-americas fa-fw"></i><span>General</span></a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="modeling"><i class="fas fa-cube fa-fw"></i><span>Modeling</span></a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="gaming"><i class="fas fa-gamepad fa-fw"></i><span>Gaming</span></a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="design"><i class="fas fa-palette fa-fw"></i><span>Design</span></a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="scripting"><i class="fas fa-code fa-fw"></i><span>Scripting</span></a>
-                                <a class="nav-link sidebar-item" href="#" data-channel="showcase-feedback"><i class="fas fa-camera-retro fa-fw"></i><span>Showcase</span></a>
-                            </nav>
-                            <div class="p-2 text-center text-muted small border-top border-dark"> <!-- Optional: Footer for Sidebar -->
-                                <i class="fas fa-wifi"></i> Connected
-                            </div>
-                        </div>
-
-                        <!-- Chat Area -->
-                        <div class="community-chat d-flex flex-column flex-grow-1">
-                            <!-- Messages Area -->
-                            <div class="chat-messages flex-grow-1" id="chatMessages">
-                                <!-- Messages will be loaded here -->
-                                <div class="text-center text-muted p-5 h-100 d-flex align-items-center justify-content-center">
-                                    <div><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading messages...</div>
-                                </div>
-                            </div>
-                            <!-- Message Input Area -->
-                            <div class="chat-input d-flex align-items-center p-3 gap-2">
-                                <input type="text" class="form-control" placeholder="Type your message in #general..." id="messageInput" aria-label="Chat message input" autocomplete="off">
-                                <button class="btn btn-primary btn-icon flex-shrink-0" id="sendMessageBtn" aria-label="Send message">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer pt-5 pb-4">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-lg-4 col-md-6">
-                    <h4 class="logo d-flex align-items-center gap-2 mb-3">
-                        <i class="fas fa-cubes fa-fw"></i>
-                        <span>SM Engine</span>
-                    </h4>
-                    <p class="text-light-emphasis pe-lg-4">The next generation suite for 3D modeling, game development, and digital creation. Empowering creators worldwide.</p>
-                </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                    <h5 class="footer-heading mb-3">Platform</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#showcase">Showcase</a></li>
-                        <li><a href="#community">Community</a></li>
-                        <li><a href="#">Pricing</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                    <h5 class="footer-heading mb-3">Resources</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Tutorials</a></li>
-                        <li><a href="#">Support</a></li>
-                        <li><a href="#">Blog</a></li>
-                    </ul>
-                </div>
-                 <div class="col-lg-2 col-md-6 col-6">
-                    <h5 class="footer-heading mb-3">Company</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 col-6">
-                    <h5 class="footer-heading mb-3">Connect</h5>
-                    <ul class="list-unstyled d-flex gap-3 social-links">
-                        <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a></li>
-                        <li><a href="#" aria-label="Discord"><i class="fab fa-discord fa-lg"></i></a></li>
-                        <li><a href="#" aria-label="YouTube"><i class="fab fa-youtube fa-lg"></i></a></li>
-                        <li><a href="#" aria-label="Github"><i class="fab fa-github fa-lg"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-light-emphasis small">
-                © <span id="currentYear"></span> SM Engine. All Rights Reserved. | <a href="#" class="footer-link">Privacy Policy</a> | <a href="#" class="footer-link">Terms of Service</a>
+            <button class="start-button" onclick="startGame()">PRESS START</button>
+            <div style="margin-top: 30px; font-size: 8px; opacity: 0.7;">
+                ARROW KEYS: Move • SPACEBAR: Jump • P: Pause • M: Mute/Unmute<br>
+                Collect coins, defeat enemies, find power-ups, and save the kingdom!
             </div>
         </div>
-    </footer>
-
-
-    <!-- Modals -->
-    <!-- Auth Modal -->
-    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="authModalTitle">Authenticate</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#loginContent" type="button" role="tab" aria-controls="loginContent" aria-selected="true">Log In</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="signup-tab" data-bs-toggle="pill" data-bs-target="#signupContent" type="button" role="tab" aria-controls="signupContent" aria-selected="false">Sign Up</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="authTabContent">
-                        <!-- Login Form -->
-                        <div class="tab-pane fade show active" id="loginContent" role="tabpanel" aria-labelledby="login-tab">
-                            <form id="loginForm">
-                                <div class="mb-3">
-                                    <label for="loginEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="loginEmail" required aria-describedby="emailHelp" autocomplete="email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="loginPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="loginPassword" required autocomplete="current-password">
-                                </div>
-                                <div id="loginError" class="alert alert-danger mt-3 small d-none p-2"></div>
-                                <button type="submit" class="btn btn-primary w-100 mb-3">Log In</button>
-                                <div class="or-divider"><span>OR</span></div>
-                                <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleLoginBtn">
-                                    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
-                                </button>
-                            </form>
-                        </div>
-                        <!-- Signup Form -->
-                        <div class="tab-pane fade" id="signupContent" role="tabpanel" aria-labelledby="signup-tab">
-                            <form id="signupForm">
-                                <div class="mb-3">
-                                    <label for="signupName" class="form-label">Display Name</label>
-                                    <input type="text" class="form-control" id="signupName" required autocomplete="nickname">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="signupEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="signupEmail" required autocomplete="email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="signupPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="signupPassword" required minlength="6" autocomplete="new-password">
-                                    <div class="form-text">Minimum 6 characters</div>
-                                </div>
-                                 <div id="signupError" class="alert alert-danger mt-3 small d-none p-2"></div>
-                                <button type="submit" class="btn btn-primary w-100 mb-3">Sign Up</button>
-                                <div class="or-divider"><span>OR</span></div>
-                                <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" id="googleSignupBtn">
-                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo"/> Continue with Google
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
+        <canvas id="gameCanvas" width="900" height="600"></canvas>
+        
+        <div id="gameUI">
+            <div>💰 SCORE: <span id="score">000000</span></div>
+            <div>❤️ LIVES: <span id="lives">3</span></div>
+            <div>🏰 WORLD: <span id="level">1-1</span></div>
+            <div>⏰ TIME: <span id="timer">400</span></div>
+            <div>🪙 COINS: <span id="coinCount">0</span></div>
+        </div>
+        
+        <div id="powerUpStatus">
+            <div>POWER: <span id="powerStatus">SMALL</span></div>
+            <div id="specialAbility"></div>
+        </div>
+        
+        <div id="instructions">
+            🎵 Epic adventure awaits! • Collect power-ups for special abilities! • Find secret warp zones! 🎵
         </div>
     </div>
 
-    <!-- Profile Modal -->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="profile-header-banner">
-                    <img src="placeholder-avatar.png" alt="User Avatar" class="profile-modal-avatar shadow" id="profileModalAvatar">
-                </div>
-                <div class="modal-header border-0 pt-5 pb-0 justify-content-end">
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center pt-2 pb-4 px-4">
-                    <h2 class="modal-title mb-1 fw-bold" id="profileModalName">User Name</h2>
-                    <p class="text-muted mb-3" id="profileModalEmail">user@example.com</p>
-                    <p class="mb-4" id="profileModalBio">No bio provided yet. Edit your profile in settings!</p>
-                    <div class="d-flex justify-content-center gap-4 mb-4">
-                        <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statProjects">--</div>
-                            <div class="small text-muted">Projects</div>
-                        </div>
-                         <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statFollowers">--</div>
-                            <div class="small text-muted">Followers</div>
-                        </div>
-                         <div class="text-center">
-                            <div class="fs-4 fw-bold" id="statFollowing">--</div>
-                            <div class="small text-muted">Following</div>
-                        </div>
-                    </div>
-                     <button class="btn btn-primary" id="editProfileBtn"><i class="fas fa-pencil-alt me-2"></i>Edit Profile</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settingsModalLabel"><i class="fas fa-cog me-2"></i>Account Settings</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="settingsForm">
-                        <div class="alert alert-success d-none p-2 mb-3" role="alert" id="settingsSuccess">
-                          Profile updated successfully!
-                        </div>
-                         <div class="alert alert-danger d-none p-2 mb-3" role="alert" id="settingsError">
-                          An error occurred. Please try again.
-                        </div>
-                        <div class="row mb-4 align-items-center">
-                            <div class="col-auto">
-                                <img src="placeholder-avatar.png" alt="Avatar Preview" id="avatarPreview" class="settings-avatar-preview rounded-circle">
-                            </div>
-                            <div class="col">
-                                <label for="avatarInput" class="form-label mb-1">Profile Picture</label>
-                                <div class="d-flex gap-2">
-                                    <input type="file" id="avatarInput" accept="image/jpeg, image/png, image/gif" class="d-none">
-                                    <button type="button" class="btn btn-secondary btn-sm" id="uploadAvatarBtn"><i class="fas fa-upload me-1"></i> Upload New</button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm" id="removeAvatarBtn"><i class="fas fa-trash-alt me-1"></i> Remove</button>
-                                </div>
-                                <div class="form-text mt-1">Upload a JPG, PNG, or GIF. Max size 2MB.</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="settingsName" class="form-label">Display Name</label>
-                            <input type="text" class="form-control" id="settingsName" required maxlength="50">
-                        </div>
-                         <div class="mb-3">
-                            <label for="settingsEmail" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="settingsEmail" disabled readonly>
-                            <div class="form-text">Email cannot be changed.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="settingsBio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="settingsBio" rows="3" placeholder="Tell us a bit about yourself..." maxlength="200"></textarea>
-                             <div class="form-text text-end"><span id="bioCharCount">0</span> / 200</div>
-                        </div>
-                        <hr class="my-4">
-                        <div class="text-end">
-                             <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancel</button>
-                             <button type="submit" class="btn btn-primary" id="saveSettingsBtn">
-                                <span class="spinner-border spinner-border-sm d-none me-1" role="status" aria-hidden="true" id="settingsSpinner"></span>
-                                Save Changes
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Firebase SDK (Use compatible versions) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-<!-- Your Custom JavaScript -->
-<script src="app.js"></script>
-
+    <script>
+        // Game setup and canvas
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let gameStarted = false;
+        
+        // Enhanced Audio System with Background Music
+        let audioContext;
+        let backgroundMusic = null;
+        let musicGain = null;
+        let isMuted = false;
+        
+        // Initialize enhanced audio system
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                musicGain = audioContext.createGain();
+                musicGain.connect(audioContext.destination);
+                musicGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                startBackgroundMusic();
+            }
+        }
+        
+        // Background music generator - Creates a looping melody
+        function startBackgroundMusic() {
+            if (!audioContext || backgroundMusic) return;
+            
+            const melody = [
+                {note: 523.25, duration: 0.25}, // C5
+                {note: 523.25, duration: 0.125}, // C5
+                {note: 0, duration: 0.125}, // Rest
+                {note: 523.25, duration: 0.25}, // C5
+                {note: 0, duration: 0.25}, // Rest
+                {note: 415.30, duration: 0.25}, // G#4
+                {note: 466.16, duration: 0.25}, // A#4
+                {note: 523.25, duration: 0.5}, // C5
+                {note: 466.16, duration: 0.25}, // A#4
+                {note: 415.30, duration: 0.5}, // G#4
+                
+                {note: 392.00, duration: 0.5}, // G4
+                {note: 261.63, duration: 0.25}, // C4
+                {note: 329.63, duration: 0.25}, // E4
+                {note: 392.00, duration: 0.25}, // G4
+                {note: 523.25, duration: 0.25}, // C5
+                {note: 659.25, duration: 0.25}, // E5
+                {note: 783.99, duration: 0.5}, // G5
+                {note: 659.25, duration: 0.25}, // E5
+                {note: 523.25, duration: 0.25}, // C5
+                {note: 392.00, duration: 0.5}, // G4
+            ];
+            
+            let noteIndex = 0;
+            let startTime = audioContext.currentTime;
+            
+            function playNextNote() {
+                if (!audioContext || isMuted) {
+                    setTimeout(playNextNote, 100);
+                    return;
+                }
+                
+                const note = melody[noteIndex % melody.length];
+                
+                if (note.note > 0) {
+                    const oscillator = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    
+                    oscillator.connect(gain);
+                    gain.connect(musicGain);
+                    
+                    oscillator.frequency.setValueAtTime(note.note, startTime);
+                    oscillator.type = 'square';
+                    
+                    gain.gain.setValueAtTime(0.05, startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, startTime + note.duration);
+                    
+                    oscillator.start(startTime);
+                    oscillator.stop(startTime + note.duration);
+                }
+                
+                startTime += note.duration;
+                noteIndex++;
+                
+                setTimeout(playNextNote, note.duration * 1000);
+            }
+            
+            playNextNote();
+            backgroundMusic = true;
+        }
+        
+        // Enhanced sound effects
+        function createEnhancedSound(frequencies, durations, type = 'square', volume = 0.15) {
+            if (!audioContext || isMuted) return;
+            
+            frequencies.forEach((freq, i) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    const filter = audioContext.createBiquadFilter();
+                    
+                    oscillator.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.type = type;
+                    filter.frequency.setValueAtTime(freq * 2, audioContext.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + durations[i]);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + durations[i]);
+                }, i * 50);
+            });
+        }
+        
+        function playJumpSound() {
+            createEnhancedSound([330, 440, 550], [0.1, 0.1, 0.2], 'sine', 0.2);
+        }
+        
+        function playCoinSound() {
+            createEnhancedSound([660, 880, 1100, 1320], [0.1, 0.1, 0.1, 0.2], 'sine', 0.25);
+        }
+        
+        function playEnemySound() {
+            createEnhancedSound([200, 150, 100, 80], [0.1, 0.1, 0.1, 0.3], 'sawtooth', 0.3);
+        }
+        
+        function playPowerUpSound() {
+            createEnhancedSound([523, 659, 784, 1047, 1319], [0.15, 0.15, 0.15, 0.15, 0.4], 'sine', 0.3);
+        }
+        
+        function playLevelCompleteSound() {
+            const notes = [523, 587, 659, 698, 784, 880, 988, 1047];
+            createEnhancedSound(notes, notes.map(() => 0.2), 'sine', 0.2);
+        }
+        
+        function playGameOverSound() {
+            createEnhancedSound([262, 247, 233, 220, 208], [0.5, 0.5, 0.5, 0.5, 1.0], 'triangle', 0.4);
+        }
+        
+        // Enhanced game state with more features
+        let gameState = {
+            score: 0,
+            lives: 3,
+            level: 1,
+            world: 1,
+            gameRunning: false,
+            paused: false,
+            camera: { x: 0, y: 0 },
+            timer: 400,
+            coins: 0,
+            powerUp: 'small', // small, big, fire, star
+            powerUpTimer: 0,
+            invincible: false,
+            invincibleTimer: 0,
+            levelComplete: false,
+            bossMode: false
+        };
+        
+        // Enhanced player with power-up states
+        const player = {
+            x: 100,
+            y: 400,
+            width: 32,
+            height: 32,
+            velocityX: 0,
+            velocityY: 0,
+            speed: 6,
+            jumpPower: 16,
+            onGround: false,
+            direction: 1,
+            animFrame: 0,
+            animTimer: 0,
+            canShoot: false,
+            shootTimer: 0
+        };
+        
+        // Enhanced game objects
+        let platforms = [];
+        let coins = [];
+        let enemies = [];
+        let particles = [];
+        let powerUps = [];
+        let projectiles = [];
+        let backgrounds = [];
+        let floatingTexts = [];
+        let secrets = [];
+        
+        // Input handling with more controls
+        const keys = {};
+        
+        document.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                if (!gameStarted) {
+                    startGame();
+                }
+                if (!audioContext) initAudio();
+            }
+            if (e.code === 'KeyP') {
+                togglePause();
+            }
+            if (e.code === 'KeyM') {
+                toggleMute();
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+        
+        function startGame() {
+            if (!gameStarted) {
+                gameStarted = true;
+                gameState.gameRunning = true;
+                document.getElementById('titleScreen').style.display = 'none';
+                initAudio();
+                initLevel();
+                startTimer();
+            }
+        }
+        
+        function togglePause() {
+            if (gameStarted) {
+                gameState.paused = !gameState.paused;
+            }
+        }
+        
+        function toggleMute() {
+            isMuted = !isMuted;
+            if (musicGain) {
+                musicGain.gain.setValueAtTime(isMuted ? 0 : 0.3, audioContext.currentTime);
+            }
+        }
+        
+        function startTimer() {
+            setInterval(() => {
+                if (gameState.gameRunning && !gameState.paused && gameState.timer > 0) {
+                    gameState.timer--;
+                    if (gameState.timer <= 0) {
+                        gameState.lives--;
+                        resetPlayerPosition();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Initialize enhanced level with more content
+        function initLevel() {
+            const levelData = getLevelData(gameState.world, gameState.level);
+            platforms = levelData.platforms;
+            coins = levelData.coins;
+            enemies = levelData.enemies;
+            powerUps = levelData.powerUps;
+            secrets = levelData.secrets || [];
+            
+            // Reset player
+            player.x = 100;
+            player.y = 400;
+            player.velocityX = 0;
+            player.velocityY = 0;
+            gameState.timer = 400;
+            gameState.levelComplete = false;
+        }
+        
+        function getLevelData(world, level) {
+            const baseData = {
+                platforms: [
+                    // Enhanced ground platforms with varied heights
+                    {x: 0, y: 550, width: 400, height: 50, type: 'ground'},
+                    {x: 500, y: 530, width: 300, height: 70, type: 'ground'},
+                    {x: 900, y: 510, width: 400, height: 90, type: 'ground'},
+                    {x: 1400, y: 490, width: 300, height: 110, type: 'ground'},
+                    
+                    // Floating platforms of different types
+                    {x: 250, y: 450, width: 120, height: 25, type: 'platform'},
+                    {x: 420, y: 350, width: 100, height: 20, type: 'cloud'},
+                    {x: 600, y: 280, width: 140, height: 25, type: 'platform'},
+                    {x: 800, y: 200, width: 100, height: 20, type: 'cloud'},
+                    {x: 1000, y: 350, width: 120, height: 25, type: 'platform'},
+                    {x: 1200, y: 250, width: 100, height: 20, type: 'cloud'},
+                    
+                    // Pipes and special structures
+                    {x: 680, y: 450, width: 80, height: 80, type: 'pipe'},
+                    {x: 1100, y: 410, width: 80, height: 100, type: 'pipe'},
+                    {x: 1500, y: 350, width: 100, height: 140, type: 'castle'},
+                    
+                    // Moving platforms
+                    {x: 350, y: 180, width: 80, height: 15, type: 'moving', moveRange: 200, moveSpeed: 2},
+                    {x: 950, y: 120, width: 80, height: 15, type: 'moving', moveRange: 150, moveSpeed: 1.5}
+                ],
+                
+                coins: [
+                    {x: 280, y: 420, collected: false, type: 'normal'},
+                    {x: 450, y: 320, collected: false, type: 'normal'},
+                    {x: 630, y: 250, collected: false, type: 'normal'},
+                    {x: 830, y: 170, collected: false, type: 'normal'},
+                    {x: 1030, y: 320, collected: false, type: 'normal'},
+                    {x: 1230, y: 220, collected: false, type: 'normal'},
+                    {x: 550, y: 500, collected: false, type: 'normal'},
+                    {x: 1150, y: 460, collected: false, type: 'normal'},
+                    // Special coins worth more
+                    {x: 380, y: 150, collected: false, type: 'special'},
+                    {x: 980, y: 90, collected: false, type: 'special'}
+                ],
+                
+                enemies: [
+                    {x: 550, y: 500, width: 28, height: 28, velocityX: -1.5, direction: -1, type: 'goomba', health: 1},
+                    {x: 300, y: 420, width: 28, height: 28, velocityX: 1, direction: 1, type: 'goomba', health: 1},
+                    {x: 750, y: 480, width: 32, height: 32, velocityX: -2, direction: -1, type: 'koopa', health: 2},
+                    {x: 1050, y: 320, width: 28, height: 28, velocityX: 1.5, direction: 1, type: 'goomba', health: 1},
+                    {x: 1250, y: 220, width: 36, height: 36, velocityX: -1, direction: -1, type: 'spiny', health: 3}
+                ],
+                
+                powerUps: [
+                    {x: 500, y: 300, type: 'mushroom', collected: false},
+                    {x: 850, y: 150, type: 'fireFlower', collected: false},
+                    {x: 1150, y: 200, type: 'star', collected: false}
+                ],
+                
+                secrets: [
+                    {x: 700, y: 400, width: 40, height: 40, type: 'warpZone', discovered: false},
+                    {x: 1300, y: 300, width: 60, height: 20, type: 'hiddenBlock', discovered: false}
+                ]
+            };
+            
+            // Add level-specific modifications
+            if (world === 1 && level > 1) {
+                // Add more challenging elements for later levels
+                baseData.enemies.push(
+                    {x: 400, y: 320, width: 40, height: 40, velocityX: 0, direction: 1, type: 'piranha', health: 2},
+                    {x: 1300, y: 350, width: 50, height: 50, velocityX: -0.5, direction: -1, type: 'boss', health: 10}
+                );
+            }
+            
+            return baseData;
+        }
+        
+        // Enhanced particle system
+        function createParticle(x, y, color, velocityX = 0, velocityY = 0, size = 3, life = 40, type = 'normal') {
+            particles.push({
+                x: x,
+                y: y,
+                velocityX: velocityX + (Math.random() - 0.5) * 6,
+                velocityY: velocityY - Math.random() * 10,
+                color: color,
+                life: life,
+                maxLife: life,
+                size: Math.random() * size + 2,
+                type: type,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.2
+            });
+        }
+        
+        function createFirework(x, y) {
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const speed = Math.random() * 8 + 4;
+                createParticle(
+                    x, y,
+                    ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFD700'][Math.floor(Math.random() * 4)],
+                    Math.cos(angle) * speed,
+                    Math.sin(angle) * speed,
+                    6, 60, 'firework'
+                );
+            }
+        }
+        
+        function createFloatingText(x, y, text, color = '#FFD700') {
+            const textElement = document.createElement('div');
+            textElement.className = 'floating-text';
+            textElement.textContent = text;
+            textElement.style.left = (x - gameState.camera.x) + 'px';
+            textElement.style.top = (y - gameState.camera.y) + 'px';
+            textElement.style.color = color;
+            document.body.appendChild(textElement);
+            
+            setTimeout(() => {
+                if (textElement.parentNode) {
+                    textElement.parentNode.removeChild(textElement);
+                }
+            }, 2000);
+        }
+        
+        // Enhanced update function with more features
+        function update() {
+            if (!gameState.gameRunning || gameState.paused) return;
+            
+            // Update timers
+            if (gameState.powerUpTimer > 0) {
+                gameState.powerUpTimer--;
+                if (gameState.powerUpTimer <= 0) {
+                    gameState.powerUp = 'small';
+                    updatePlayerSize();
+                }
+            }
+            
+            if (gameState.invincibleTimer > 0) {
+                gameState.invincibleTimer--;
+                gameState.invincible = gameState.invincibleTimer > 0;
+            }
+            
+            // Player input with enhanced controls
+            if (keys['ArrowLeft']) {
+                player.velocityX = -player.speed;
+                player.direction = -1;
+            } else if (keys['ArrowRight']) {
+                player.velocityX = player.speed;
+                player.direction = 1;
+            } else {
+                player.velocityX *= 0.85; // Enhanced friction
+            }
+            
+            if (keys['Space'] && player.onGround) {
+                player.velocityY = -player.jumpPower;
+                player.onGround = false;
+                playJumpSound();
+                createParticle(player.x + player.width/2, player.y + player.height, '#87CEEB', 0, 0, 2, 20);
+            }
+            
+            // Fire projectiles for fire flower power-up
+            if (keys['KeyX'] && gameState.powerUp === 'fire' && player.shootTimer <= 0) {
+                shootFireball();
+                player.shootTimer = 20;
+            }
+            
+            if (player.shootTimer > 0) player.shootTimer--;
+            
+            // Enhanced player physics
+            player.velocityY += 0.9; // Gravity
+            player.x += player.velocityX;
+            player.y += player.velocityY;
+            
+            // Player animation with more frames
+            player.animTimer++;
+            if (player.animTimer > 6) {
+                player.animFrame = (player.animFrame + 1) % 6;
+                player.animTimer = 0;
+            }
+            
+            // Enhanced platform collision
+            updatePlatformCollisions();
+            
+            // Update moving platforms
+            platforms.forEach(platform => {
+                if (platform.type === 'moving') {
+                    if (!platform.originalX) platform.originalX = platform.x;
+                    platform.x += platform.moveSpeed;
+                    if (platform.x > platform.originalX + platform.moveRange || platform.x < platform.originalX) {
+                        platform.moveSpeed *= -1;
+                    }
+                }
+            });
+            
+            // Enhanced enemy AI and collision
+            updateEnemies();
+            
+            // Update projectiles
+            updateProjectiles();
+            
+            // Enhanced coin collection
+            updateCoins();
+            
+            // Power-up collection
+            updatePowerUps();
+            
+            // Update particles with enhanced effects
+            updateParticles();
+            
+            // Secret area discovery
+            updateSecrets();
+            
+            // Enhanced camera system
+            updateCamera();
+            
+            // Level completion and progression
+            checkLevelCompletion();
+            
+            // Player bounds and respawn
+            checkPlayerBounds();
+        }
+        
+        function updatePlayerSize() {
+            switch(gameState.powerUp) {
+                case 'small':
+                    player.width = 32;
+                    player.height = 32;
+                    break;
+                case 'big':
+                    player.width = 36;
+                    player.height = 48;
+                    break;
+                case 'fire':
+                    player.width = 36;
+                    player.height = 48;
+                    player.canShoot = true;
+                    break;
+            }
+        }
+        
+        function shootFireball() {
+            projectiles.push({
+                x: player.x + (player.direction > 0 ? player.width : 0),
+                y: player.y + player.height / 2,
+                velocityX: player.direction * 8,
+                velocityY: -2,
+                type: 'fireball',
+                life: 100
+            });
+        }
+        
+        function updatePlatformCollisions() {
+            player.onGround = false;
+            platforms.forEach(platform => {
+                if (player.x < platform.x + platform.width &&
+                    player.x + player.width > platform.x &&
+                    player.y < platform.y + platform.height &&
+                    player.y + player.height > platform.y) {
+                    
+                    if (platform.type === 'cloud' && player.velocityY <= 0) return;
+                    
+                    // Top collision
+                    if (player.velocityY > 0 && player.y < platform.y) {
+                        player.y = platform.y - player.height;
+                        player.velocityY = 0;
+                        player.onGround = true;
+                        
+                        // Moving platform effect
+                        if (platform.type === 'moving') {
+                            player.x += platform.moveSpeed;
+                        }
+                    }
+                    // Bottom collision
+                    else if (player.velocityY < 0 && player.y > platform.y) {
+                        player.y = platform.y + platform.height;
+                        player.velocityY = 0;
+                        
+                        // Break blocks if big
+                        if ((gameState.powerUp === 'big' || gameState.powerUp === 'fire') && platform.type === 'brick') {
+                            platform.broken = true;
+                            createParticle(platform.x + platform.width/2, platform.y + platform.height/2, '#8B4513', 0, 0, 4, 30);
+                            gameState.score += 50;
+                        }
+                    }
+                    // Side collisions
+                    else if (player.velocityX > 0) {
+                        player.x = platform.x - player.width;
+                        player.velocityX = 0;
+                    } else if (player.velocityX < 0) {
+                        player.x = platform.x + platform.width;
+                        player.velocityX = 0;
+                    }
+                }
+            });
+        }
+        
+        function updateEnemies() {
+            enemies = enemies.filter(enemy => enemy.health > 0 && enemy.x > -200);
+            
+            enemies.forEach(enemy => {
+                // Enhanced enemy AI
+                if (enemy.type === 'piranha') {
+                    // Piranha plants oscillate up and down
+                    enemy.y += Math.sin(Date.now() * 0.01) * 0.5;
+                } else if (enemy.type === 'boss') {
+                    // Boss has more complex movement
+                    if (Math.abs(player.x - enemy.x) < 300) {
+                        enemy.velocityX = player.x > enemy.x ? 1 : -1;
+                        if (Math.random() < 0.02) {
+                            // Boss shoots projectiles
+                            projectiles.push({
+                                x: enemy.x + enemy.width/2,
+                                y: enemy.y + enemy.height/2,
+                                velocityX: (player.x - enemy.x) / 50,
+                                velocityY: (player.y - enemy.y) / 50,
+                                type: 'enemyProjectile',
+                                life: 120
+                            });
+                        }
+                    }
+                } else {
+                    enemy.x += enemy.velocityX;
+                }
+                
+                // Enhanced enemy platform collision
+                let onPlatform = false;
+                platforms.forEach(platform => {
+                    if (enemy.x < platform.x + platform.width &&
+                        enemy.x + enemy.width > platform.x &&
+                        enemy.y + enemy.height >= platform.y &&
+                        enemy.y + enemy.height <= platform.y + platform.height + 10) {
+                        onPlatform = true;
+                        
+                        // Ground enemy on platform
+                        if (enemy.y + enemy.height > platform.y) {
+                            enemy.y = platform.y - enemy.height;
+                        }
+                    }
+                });
+                
+                // Turn around at platform edges (except flying enemies)
+                if (!onPlatform && enemy.type !== 'piranha') {
+                    enemy.velocityX *= -1;
+                    enemy.direction *= -1;
+                }
+                
+                // Enhanced player-enemy collision
+                if (player.x < enemy.x + enemy.width &&
+                    player.x + player.width > enemy.x &&
+                    player.y < enemy.y + enemy.height &&
+                    player.y + player.height > enemy.y) {
+                    
+                    if (gameState.invincible) {
+                        // Invincible player defeats enemy
+                        enemy.health = 0;
+                        gameState.score += enemy.type === 'boss' ? 1000 : 200;
+                        createFirework(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                        playEnemySound();
+                    }
+                    else if (player.velocityY > 0 && player.y < enemy.y && enemy.type !== 'spiny') {
+                        // Jump on enemy
+                        player.velocityY = -10;
+                        enemy.health--;
+                        
+                        if (enemy.health <= 0) {
+                            gameState.score += enemy.type === 'boss' ? 1000 : (enemy.type === 'koopa' ? 200 : 100);
+                            createFloatingText(enemy.x, enemy.y - 20, '+' + (enemy.type === 'boss' ? 1000 : (enemy.type === 'koopa' ? 200 : 100)));
+                            
+                            // Special effects for boss defeat
+                            if (enemy.type === 'boss') {
+                                createFirework(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                                gameState.bossMode = false;
+                                playLevelCompleteSound();
+                            }
+                        }
+                        
+                        playEnemySound();
+                        
+                        // Create impact particles
+                        for (let i = 0; i < 8; i++) {
+                            createParticle(enemy.x + enemy.width/2, enemy.y + enemy.height/2, '#8B4513', 0, 0, 3, 25);
+                        }
+                    } else {
+                        // Player takes damage
+                        if (!gameState.invincible) {
+                            takeDamage();
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateProjectiles() {
+            projectiles = projectiles.filter(proj => proj.life > 0);
+            
+            projectiles.forEach(projectile => {
+                projectile.x += projectile.velocityX;
+                projectile.y += projectile.velocityY;
+                projectile.life--;
+                
+                if (projectile.type === 'fireball') {
+                    projectile.velocityY += 0.3; // Gravity on fireballs
+                    
+                    // Fireball bounces
+                    platforms.forEach(platform => {
+                        if (projectile.x < platform.x + platform.width &&
+                            projectile.x + 8 > platform.x &&
+                            projectile.y < platform.y + platform.height &&
+                            projectile.y + 8 > platform.y) {
+                            projectile.velocityY = -Math.abs(projectile.velocityY) * 0.7;
+                        }
+                    });
+                    
+                    // Fireball hits enemies
+                    enemies.forEach(enemy => {
+                        if (projectile.x < enemy.x + enemy.width &&
+                            projectile.x + 8 > enemy.x &&
+                            projectile.y < enemy.y + enemy.height &&
+                            projectile.y + 8 > enemy.y) {
+                            enemy.health--;
+                            projectile.life = 0;
+                            gameState.score += 50;
+                            createParticle(enemy.x + enemy.width/2, enemy.y + enemy.height/2, '#FF4444', 0, 0, 4, 30);
+                        }
+                    });
+                    
+                    // Fireball particle trail
+                    createParticle(projectile.x + 4, projectile.y + 4, '#FF6B6B', 0, 0, 2, 15);
+                }
+                
+                if (projectile.type === 'enemyProjectile') {
+                    // Enemy projectile hits player
+                    if (!gameState.invincible &&
+                        projectile.x < player.x + player.width &&
+                        projectile.x + 8 > player.x &&
+                        projectile.y < player.y + player.height &&
+                        projectile.y + 8 > player.y) {
+                        takeDamage();
+                        projectile.life = 0;
+                    }
+                }
+            });
+        }
+        
+        function updateCoins() {
+            coins.forEach(coin => {
+                if (!coin.collected &&
+                    player.x < coin.x + 24 &&
+                    player.x + player.width > coin.x &&
+                    player.y < coin.y + 24 &&
+                    player.y + player.height > coin.y) {
+                    
+                    coin.collected = true;
+                    const points = coin.type === 'special' ? 500 : 100;
+                    gameState.score += points;
+                    gameState.coins++;
+                    
+                    playCoinSound();
+                    createFloatingText(coin.x, coin.y - 30, '+' + points);
+                    
+                    // Create enhanced coin particles
+                    for (let i = 0; i < 10; i++) {
+                        createParticle(coin.x + 12, coin.y + 12, 
+                            coin.type === 'special' ? '#FF6B6B' : '#FFD700', 0, 0, 4, 40);
+                    }
+                    
+                    // Extra life every 100 coins
+                    if (gameState.coins % 100 === 0) {
+                        gameState.lives++;
+                        createFloatingText(coin.x, coin.y - 50, '1UP!', '#00FF00');
+                        playPowerUpSound();
+                    }
+                }
+            });
+        }
+        
+        function updatePowerUps() {
+            powerUps.forEach(powerUp => {
+                if (!powerUp.collected &&
+                    player.x < powerUp.x + 32 &&
+                    player.x + player.width > powerUp.x &&
+                    player.y < powerUp.y + 32 &&
+                    player.y + player.height > powerUp.y) {
+                    
+                    powerUp.collected = true;
+                    
+                    switch (powerUp.type) {
+                        case 'mushroom':
+                            if (gameState.powerUp === 'small') {
+                                gameState.powerUp = 'big';
+                                gameState.powerUpTimer = 0; // Permanent until hit
+                                updatePlayerSize();
+                                gameState.score += 1000;
+                                createFloatingText(powerUp.x, powerUp.y - 30, '+1000');
+                            } else {
+                                gameState.score += 1000;
+                                createFloatingText(powerUp.x, powerUp.y - 30, '+1000');
+                            }
+                            break;
+                            
+                        case 'fireFlower':
+                            gameState.powerUp = 'fire';
+                            gameState.powerUpTimer = 0; // Permanent until hit
+                            updatePlayerSize();
+                            gameState.score += 1000;
+                            createFloatingText(powerUp.x, powerUp.y - 30, 'FIRE POWER!');
+                            break;
+                            
+                        case 'star':
+                            gameState.invincible = true;
+                            gameState.invincibleTimer = 600; // 10 seconds at 60fps
+                            gameState.score += 1000;
+                            createFloatingText(powerUp.x, powerUp.y - 30, 'INVINCIBLE!');
+                            break;
+                    }
+                    
+                    playPowerUpSound();
+                    
+                    // Create power-up particles
+                    for (let i = 0; i < 15; i++) {
+                        createParticle(powerUp.x + 16, powerUp.y + 16, '#FFD700', 0, 0, 5, 50, 'sparkle');
+                    }
+                }
+            });
+        }
+        
+        function updateParticles() {
+            particles = particles.filter(particle => {
+                particle.x += particle.velocityX;
+                particle.y += particle.velocityY;
+                particle.velocityY += 0.4; // Gravity
+                particle.life--;
+                particle.rotation += particle.rotationSpeed;
+                
+                // Fade out
+                particle.alpha = particle.life / particle.maxLife;
+                
+                return particle.life > 0;
+            });
+        }
+        
+        function updateSecrets() {
+            secrets.forEach(secret => {
+                if (!secret.discovered &&
+                    player.x < secret.x + secret.width &&
+                    player.x + player.width > secret.x &&
+                    player.y < secret.y + secret.height &&
+                    player.y + player.height > secret.y) {
+                    
+                    secret.discovered = true;
+                    
+                    if (secret.type === 'warpZone') {
+                        gameState.world++;
+                        gameState.level = 1;
+                        createFloatingText(secret.x, secret.y - 30, 'WARP ZONE!', '#00FF00');
+                        playLevelCompleteSound();
+                        setTimeout(() => {
+                            initLevel();
+                        }, 1000);
+                    } else if (secret.type === 'hiddenBlock') {
+                        // Hidden block becomes visible and spawns power-up
+                        platforms.push({
+                            x: secret.x, y: secret.y, width: secret.width, height: secret.width,
+                            type: 'question', hit: false
+                        });
+                        powerUps.push({
+                            x: secret.x, y: secret.y - 32, type: 'mushroom', collected: false
+                        });
+                        createFloatingText(secret.x, secret.y - 50, 'SECRET!', '#FF6B6B');
+                    }
+                }
+            });
+        }
+        
+        function updateCamera() {
+            // Smooth camera following
+            const targetX = player.x - canvas.width / 2;
+            const targetY = player.y - canvas.height / 2;
+            
+            gameState.camera.x += (targetX - gameState.camera.x) * 0.1;
+            gameState.camera.y += (targetY - gameState.camera.y) * 0.05;
+            
+            // Camera bounds
+            gameState.camera.x = Math.max(0, Math.min(gameState.camera.x, 2000 - canvas.width));
+            gameState.camera.y = Math.max(-200, Math.min(gameState.camera.y, 200));
+        }
+        
+        function checkLevelCompletion() {
+            // Check if all coins collected or reached end
+            if ((coins.every(coin => coin.collected) || player.x > 1600) && !gameState.levelComplete) {
+                gameState.levelComplete = true;
+                gameState.level++;
+                gameState.score += gameState.timer * 50; // Bonus for remaining time
+                
+                createFloatingText(player.x, player.y - 50, 'LEVEL COMPLETE!', '#00FF00');
+                playLevelCompleteSound();
+                
+                setTimeout(() => {
+                    if (gameState.level > 3) {
+                        gameState.world++;
+                        gameState.level = 1;
+                    }
+                    initLevel();
+                }, 2000);
+            }
+        }
+        
+        function checkPlayerBounds() {
+            // Fall death
+            if (player.y > 700) {
+                takeDamage();
+            }
+            
+            // Left boundary
+            if (player.x < 0) {
+                player.x = 0;
+                player.velocityX = 0;
+            }
+        }
+        
+        function takeDamage() {
+            if (gameState.invincible) return;
+            
+            if (gameState.powerUp !== 'small') {
+                // Lose power-up instead of life
+                gameState.powerUp = gameState.powerUp === 'fire' ? 'big' : 'small';
+                updatePlayerSize();
+                gameState.invincible = true;
+                gameState.invincibleTimer = 120; // 2 seconds of invincibility
+                createFloatingText(player.x, player.y - 30, 'POWER DOWN!', '#FF6B6B');
+            } else {
+                // Lose life
+                gameState.lives--;
+                playGameOverSound();
+                
+                if (gameState.lives <= 0) {
+                    gameState.gameRunning = false;
+                } else {
+                    resetPlayerPosition();
+                    gameState.invincible = true;
+                    gameState.invincibleTimer = 180; // 3 seconds of invincibility
+                }
+            }
+        }
+        
+        function resetPlayerPosition() {
+            player.x = 100;
+            player.y = 400;
+            player.velocityX = 0;
+            player.velocityY = 0;
+            gameState.timer = Math.max(gameState.timer, 100); // Give some time back
+        }
+        
+        // Enhanced rendering with more visual effects
+        function render() {
+            // Animated background gradient
+            const time = Date.now() * 0.001;
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, `hsl(${200 + Math.sin(time) * 20}, 70%, 80%)`);
+            gradient.addColorStop(0.6, `hsl(${120 + Math.sin(time * 0.5) * 10}, 60%, 70%)`);
+            gradient.addColorStop(0.85, `hsl(${90 + Math.sin(time * 0.3) * 5}, 50%, 60%)`);
+            gradient.addColorStop(1, '#8B4513');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Enhanced clouds with depth
+            ctx.save();
+            for (let layer = 0; layer < 3; layer++) {
+                ctx.globalAlpha = 0.6 - layer * 0.2;
+                ctx.fillStyle = 'white';
+                for (let i = 0; i < 8; i++) {
+                    const x = (i * 180 + 30 - gameState.camera.x * (0.3 + layer * 0.1)) % (canvas.width + 150);
+                    const y = 40 + layer * 30 + Math.sin(i + time) * 15;
+                    drawEnhancedCloud(x, y, 1 + layer * 0.5);
+                }
+            }
+            ctx.restore();
+            
+            // Parallax background elements
+            drawParallaxBackground();
+            
+            ctx.save();
+            ctx.translate(-gameState.camera.x, -gameState.camera.y);
+            
+            // Draw enhanced platforms
+            drawPlatforms();
+            
+            // Draw coins with enhanced animation
+            drawCoins();
+            
+            // Draw power-ups
+            drawPowerUps();
+            
+            // Draw enemies with enhanced sprites
+            drawEnemies();
+            
+            // Draw projectiles
+            drawProjectiles();
+            
+            // Draw player with power-up effects
+            drawEnhancedPlayer();
+            
+            // Draw particles
+            drawParticles();
+            
+            // Draw secrets
+            drawSecrets();
+            
+            ctx.restore();
+            
+            // Enhanced UI
+            updateUI();
+            
+            // Draw pause/game over screens
+            drawOverlays();
+        }
+        
+        function drawEnhancedCloud(x, y, scale = 1) {
+            ctx.save();
+            ctx.scale(scale, scale);
+            ctx.beginPath();
+            ctx.arc(x/scale, y/scale, 20, 0, Math.PI * 2);
+            ctx.arc(x/scale + 20, y/scale, 25, 0, Math.PI * 2);
+            ctx.arc(x/scale + 40, y/scale, 20, 0, Math.PI * 2);
+            ctx.arc(x/scale + 15, y/scale - 12, 15, 0, Math.PI * 2);
+            ctx.arc(x/scale + 30, y/scale - 12, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+        
+        function drawParallaxBackground() {
+            ctx.save();
+            // Draw distant mountains
+            ctx.fillStyle = '#8B7355';
+            for (let i = 0; i < 5; i++) {
+                const x = i * 300 - gameState.camera.x * 0.2;
+                const height = 100 + Math.sin(i) * 50;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height - 150);
+                ctx.lineTo(x + 150, canvas.height - 150 - height);
+                ctx.lineTo(x + 300, canvas.height - 150);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // Draw distant trees
+            ctx.fillStyle = '#228B22';
+            for (let i = 0; i < 10; i++) {
+                const x = i * 150 - gameState.camera.x * 0.4;
+                const height = 40 + Math.sin(i * 2) * 20;
+                drawTree(x, canvas.height - 200, height);
+            }
+            ctx.restore();
+        }
+        
+        function drawTree(x, y, height) {
+            // Tree trunk
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(x - 5, y, 10, height);
+            
+            // Tree leaves
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(x, y - height/2, height/3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawPlatforms() {
+            platforms.forEach(platform => {
+                if (platform.broken) return;
+                
+                switch (platform.type) {
+                    case 'ground':
+                        // Enhanced ground with texture
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        ctx.fillStyle = '#32CD32';
+                        ctx.fillRect(platform.x, platform.y, platform.width, 12);
+                        
+                        // Add grass details
+                        ctx.fillStyle = '#228B22';
+                        for (let i = 0; i < platform.width; i += 20) {
+                            ctx.fillRect(platform.x + i, platform.y, 3, 8);
+                            ctx.fillRect(platform.x + i + 10, platform.y, 2, 6);
+                        }
+                        break;
+                        
+                    case 'platform':
+                        // Wooden platform
+                        ctx.fillStyle = '#DEB887';
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        ctx.fillStyle = '#8B7355';
+                        ctx.fillRect(platform.x + 3, platform.y + 3, platform.width - 6, platform.height - 6);
+                        
+                        // Wood grain lines
+                        ctx.strokeStyle = '#654321';
+                        ctx.lineWidth = 1;
+                        for (let i = 0; i < 3; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(platform.x + 5, platform.y + 5 + i * 5);
+                            ctx.lineTo(platform.x + platform.width - 5, platform.y + 5 + i * 5);
+                            ctx.stroke();
+                        }
+                        break;
+                        
+                    case 'cloud':
+                        // Cloud platform
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        drawEnhancedCloud(platform.x, platform.y + 10, 1);
+                        break;
+                        
+                    case 'pipe':
+                        // Enhanced pipe
+                        ctx.fillStyle = '#228B22';
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        ctx.fillStyle = '#32CD32';
+                        ctx.fillRect(platform.x, platform.y, platform.width, 15);
+                        ctx.fillRect(platform.x + 8, platform.y + 15, platform.width - 16, platform.height - 15);
+                        
+                        // Pipe highlights
+                        ctx.fillStyle = '#90EE90';
+                        ctx.fillRect(platform.x + 3, platform.y + 3, 6, platform.height - 6);
+                        break;
+                        
+                    case 'castle':
+                        // Castle structure
+                        ctx.fillStyle = '#696969';
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        
+                        // Castle details
+                        ctx.fillStyle = '#778899';
+                        for (let i = 0; i < 4; i++) {
+                            ctx.fillRect(platform.x + i * 25, platform.y, 15, 20);
+                        }
+                        
+                        // Castle door
+                        ctx.fillStyle = '#2F4F4F';
+                        ctx.fillRect(platform.x + platform.width/2 - 15, platform.y + platform.height - 40, 30, 40);
+                        break;
+                        
+                    case 'moving':
+                        // Moving platform with glow
+                        ctx.fillStyle = '#4169E1';
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        
+                        // Glow effect
+                        ctx.save();
+                        ctx.shadowColor = '#4169E1';
+                        ctx.shadowBlur = 10;
+                        ctx.fillStyle = '#87CEEB';
+                        ctx.fillRect(platform.x + 2, platform.y + 2, platform.width - 4, platform.height - 4);
+                        ctx.restore();
+                        break;
+                }
+            });
+        }
+        
+        function drawCoins() {
+            coins.forEach(coin => {
+                if (!coin.collected) {
+                    const time = Date.now() * 0.008;
+                    const bounce = Math.sin(time + coin.x * 0.01) * 4;
+                    const rotation = time + coin.x * 0.02;
+                    
+                    ctx.save();
+                    ctx.translate(coin.x + 12, coin.y + 12 + bounce);
+                    ctx.rotate(rotation);
+                    
+                    if (coin.type === 'special') {
+                        // Special coin with rainbow effect
+                        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 12);
+                        gradient.addColorStop(0, '#FFD700');
+                        gradient.addColorStop(0.5, '#FF6B6B');
+                        gradient.addColorStop(1, '#4ECDC4');
+                        ctx.fillStyle = gradient;
+                    } else {
+                        // Regular gold coin
+                        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 10);
+                        gradient.addColorStop(0, '#FFD700');
+                        gradient.addColorStop(0.7, '#FFA500');
+                        gradient.addColorStop(1, '#FF8C00');
+                        ctx.fillStyle = gradient;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(0, 0, coin.type === 'special' ? 12 : 10, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Inner shine
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.beginPath();
+                    ctx.arc(-3, -3, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                }
+            });
+        }
+        
+        function drawPowerUps() {
+            powerUps.forEach(powerUp => {
+                if (!powerUp.collected) {
+                    const time = Date.now() * 0.01;
+                    const bounce = Math.sin(time + powerUp.x * 0.02) * 3;
+                    
+                    ctx.save();
+                    ctx.translate(powerUp.x + 16, powerUp.y + 16 + bounce);
+                    
+                    switch (powerUp.type) {
+                        case 'mushroom':
+                            // Mushroom
+                            ctx.fillStyle = '#FF6B6B';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, 14, 0, Math.PI);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = '#FFFF99';
+                            ctx.fillRect(-3, 0, 6, 12);
+                            
+                            // Spots
+                            ctx.fillStyle = 'white';
+                            ctx.beginPath();
+                            ctx.arc(-6, -4, 3, 0, Math.PI * 2);
+                            ctx.arc(6, -6, 2, 0, Math.PI * 2);
+                            ctx.arc(2, -8, 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            break;
+                            
+                        case 'fireFlower':
+                            // Fire flower
+                            ctx.fillStyle = '#FF4500';
+                            for (let i = 0; i < 8; i++) {
+                                const angle = (i / 8) * Math.PI * 2 + time;
+                                const x = Math.cos(angle) * 12;
+                                const y = Math.sin(angle) * 12;
+                                ctx.beginPath();
+                                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                            
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, 6, 0, Math.PI * 2);
+                            ctx.fill();
+                            break;
+                            
+                        case 'star':
+                            // Star with glow
+                            ctx.save();
+                            ctx.shadowColor = '#FFD700';
+                            ctx.shadowBlur = 15;
+                            ctx.rotate(time);
+                            
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            for (let i = 0; i < 10; i++) {
+                                const angle = (i / 10) * Math.PI * 2;
+                                const radius = i % 2 === 0 ? 12 : 6;
+                                const x = Math.cos(angle) * radius;
+                                const y = Math.sin(angle) * radius;
+                                if (i === 0) ctx.moveTo(x, y);
+                                else ctx.lineTo(x, y);
+                            }
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.restore();
+                            break;
+                    }
+                    
+                    ctx.restore();
+                }
+            });
+        }
+        
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                if (enemy.x > -100 && enemy.health > 0) {
+                    ctx.save();
+                                        ctx.translate(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                    
+                    // Flip enemy based on direction
+                    if (enemy.direction < 0) {
+                        ctx.scale(-1, 1);
+                    }
+                    
+                    switch (enemy.type) {
+                        case 'goomba':
+                            // Draw goomba
+                            ctx.fillStyle = '#8B4513';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Goomba face
+                            ctx.fillStyle = '#000';
+                            ctx.beginPath();
+                            ctx.arc(-5, -3, 3, 0, Math.PI * 2);
+                            ctx.arc(5, -3, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = '#FFF';
+                            ctx.beginPath();
+                            ctx.arc(-5, -3, 1, 0, Math.PI * 2);
+                            ctx.arc(5, -3, 1, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Goomba mouth
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(0, 2, 5, 0.1 * Math.PI, 0.9 * Math.PI);
+                            ctx.stroke();
+                            break;
+                            
+                        case 'koopa':
+                            // Draw koopa shell
+                            ctx.fillStyle = '#228B22';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Shell details
+                            ctx.fillStyle = '#32CD32';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2 - 4, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Koopa face
+                            ctx.fillStyle = '#000';
+                            ctx.beginPath();
+                            ctx.arc(-6, -5, 3, 0, Math.PI * 2);
+                            ctx.arc(6, -5, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = '#FFF';
+                            ctx.beginPath();
+                            ctx.arc(-6, -5, 1, 0, Math.PI * 2);
+                            ctx.arc(6, -5, 1, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Koopa mouth
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(0, 0, 8, 0.2 * Math.PI, 0.8 * Math.PI);
+                            ctx.stroke();
+                            break;
+                            
+                        case 'spiny':
+                            // Draw spiny
+                            ctx.fillStyle = '#FF6B6B';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Spiny spikes
+                            ctx.fillStyle = '#FFF';
+                            for (let i = 0; i < 8; i++) {
+                                const angle = (i / 8) * Math.PI * 2;
+                                const x = Math.cos(angle) * (enemy.width/2 - 2);
+                                const y = Math.sin(angle) * (enemy.width/2 - 2);
+                                ctx.beginPath();
+                                ctx.moveTo(0, 0);
+                                ctx.lineTo(x, y);
+                                ctx.lineTo(x + Math.cos(angle + 0.2) * 5, y + Math.sin(angle + 0.2) * 5);
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                            
+                            // Spiny face
+                            ctx.fillStyle = '#000';
+                            ctx.beginPath();
+                            ctx.arc(-5, -3, 2, 0, Math.PI * 2);
+                            ctx.arc(5, -3, 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            break;
+                            
+                        case 'piranha':
+                            // Draw piranha plant
+                            ctx.fillStyle = '#228B22';
+                            ctx.fillRect(-enemy.width/2, -enemy.height/2, enemy.width, enemy.height);
+                            
+                            // Plant mouth
+                            ctx.fillStyle = '#FF0000';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2 - 2, 0, Math.PI);
+                            ctx.fill();
+                            
+                            // Teeth
+                            ctx.fillStyle = '#FFF';
+                            for (let i = 0; i < 6; i++) {
+                                const x = -enemy.width/2 + 4 + i * 8;
+                                ctx.fillRect(x, 0, 4, 4);
+                            }
+                            break;
+                            
+                        case 'boss':
+                            // Draw boss enemy
+                            ctx.fillStyle = '#8A2BE2';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Boss details
+                            ctx.fillStyle = '#9370DB';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, enemy.width/2 - 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Boss eyes
+                            ctx.fillStyle = '#000';
+                            ctx.beginPath();
+                            ctx.arc(-10, -8, 5, 0, Math.PI * 2);
+                            ctx.arc(10, -8, 5, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = '#FFF';
+                            ctx.beginPath();
+                            ctx.arc(-10, -8, 2, 0, Math.PI * 2);
+                            ctx.arc(10, -8, 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Boss mouth
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(0, 5, 15, 0.2 * Math.PI, 0.8 * Math.PI);
+                            ctx.stroke();
+                            break;
+                    }
+                    
+                    ctx.restore();
+                }
+            });
+        }
+        
+        function drawProjectiles() {
+            projectiles.forEach(projectile => {
+                ctx.save();
+                ctx.translate(projectile.x + 4, projectile.y + 4);
+                
+                switch (projectile.type) {
+                    case 'fireball':
+                        // Draw fireball with glow
+                        ctx.save();
+                        ctx.shadowColor = '#FF4500';
+                        ctx.shadowBlur = 10;
+                        
+                        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 4);
+                        gradient.addColorStop(0, '#FFD700');
+                        gradient.addColorStop(0.5, '#FF8C00');
+                        gradient.addColorStop(1, '#FF4500');
+                        ctx.fillStyle = gradient;
+                        
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                        break;
+                        
+                    case 'enemyProjectile':
+                        // Draw enemy projectile
+                        ctx.fillStyle = '#FF0000';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                }
+                
+                ctx.restore();
+            });
+        }
+        
+        function drawEnhancedPlayer() {
+            ctx.save();
+            ctx.translate(player.x + player.width/2, player.y + player.height/2);
+            
+            // Flip player based on direction
+            if (player.direction < 0) {
+                ctx.scale(-1, 1);
+            }
+            
+            // Invincibility flash effect
+            if (gameState.invincible && Math.floor(Date.now() / 100) % 2 === 0) {
+                ctx.globalAlpha = 0.6;
+            }
+            
+            // Draw player based on power-up state
+            switch (gameState.powerUp) {
+                case 'small':
+                    // Small Mario
+                    ctx.fillStyle = '#FF0000';
+                    ctx.fillRect(-player.width/2, -player.height/2, player.width, player.height);
+                    
+                    // Mario details
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(-player.width/2 + 6, -player.height/2 + 6, 6, 4); // Hair
+                    ctx.fillRect(-player.width/2 + 4, -player.height/2 + 10, 4, 4); // Eye
+                    ctx.fillRect(-player.width/2 + 12, -player.height/2 + 10, 4, 4); // Mustache
+                    
+                    ctx.fillStyle = '#FFF';
+                    ctx.fillRect(-player.width/2 + 6, -player.height/2 + 10, 2, 2); // Eye white
+                    
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(-player.width/2 + 4, -player.height/2 + 14, 12, 6); // Overalls
+                    
+                    ctx.fillStyle = '#0000FF';
+                    ctx.fillRect(-player.width/2 + 6, -player.height/2 + 14, 8, 6); // Overalls detail
+                    
+                    // Animation for running
+                    if (player.velocityX !== 0 && player.onGround) {
+                        const legPos = Math.sin(Date.now() * 0.01) * 2;
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-player.width/2 + 4, -player.height/2 + 20, 4, 12 + legPos); // Left leg
+                        ctx.fillRect(-player.width/2 + 12, -player.height/2 + 20, 4, 12 - legPos); // Right leg
+                    } else {
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-player.width/2 + 4, -player.height/2 + 20, 4, 12); // Left leg
+                        ctx.fillRect(-player.width/2 + 12, -player.height/2 + 20, 4, 12); // Right leg
+                    }
+                    break;
+                    
+                case 'big':
+                case 'fire':
+                    // Big Mario or Fire Mario
+                    ctx.fillStyle = '#FF0000';
+                    ctx.fillRect(-player.width/2, -player.height/2 + 8, player.width, player.height - 8); // Body
+                    ctx.fillRect(-player.width/2 + 4, -player.height/2, player.width - 8, 8); // Head
+                    
+                    // Mario details
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(-player.width/2 + 8, -player.height/2 + 4, 6, 4); // Hair
+                    ctx.fillRect(-player.width/2 + 6, -player.height/2 + 8, 4, 4); // Eye
+                    ctx.fillRect(-player.width/2 + 14, -player.height/2 + 8, 4, 4); // Mustache
+                    
+                    ctx.fillStyle = '#FFF';
+                    ctx.fillRect(-player.width/2 + 8, -player.height/2 + 8, 2, 2); // Eye white
+                    
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(-player.width/2 + 6, -player.height/2 + 16, 16, 8); // Overalls
+                    
+                    ctx.fillStyle = '#0000FF';
+                    ctx.fillRect(-player.width/2 + 8, -player.height/2 + 16, 12, 8); // Overalls detail
+                    
+                    // Fire Mario has white gloves
+                    if (gameState.powerUp === 'fire') {
+                        ctx.fillStyle = '#FFF';
+                        ctx.fillRect(-player.width/2 + 2, -player.height/2 + 12, 4, 4); // Left glove
+                        ctx.fillRect(-player.width/2 + 18, -player.height/2 + 12, 4, 4); // Right glove
+                    }
+                    
+                    // Animation for running
+                    if (player.velocityX !== 0 && player.onGround) {
+                        const legPos = Math.sin(Date.now() * 0.01) * 3;
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-player.width/2 + 6, -player.height/2 + 24, 4, 16 + legPos); // Left leg
+                        ctx.fillRect(-player.width/2 + 14, -player.height/2 + 24, 4, 16 - legPos); // Right leg
+                    } else {
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-player.width/2 + 6, -player.height/2 + 24, 4, 16); // Left leg
+                        ctx.fillRect(-player.width/2 + 14, -player.height/2 + 24, 4, 16); // Right leg
+                    }
+                    
+                    // Jumping animation
+                    if (!player.onGround) {
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-player.width/2 + 6, -player.height/2 + 24, 8, 16); // Legs together
+                    }
+                    break;
+            }
+            
+            ctx.restore();
+        }
+        
+        function drawParticles() {
+            particles.forEach(particle => {
+                ctx.save();
+                ctx.translate(particle.x, particle.y);
+                ctx.globalAlpha = particle.alpha;
+                
+                switch (particle.type) {
+                    case 'normal':
+                        ctx.fillStyle = particle.color;
+                        ctx.fillRect(-particle.size/2, -particle.size/2, particle.size, particle.size);
+                        break;
+                        
+                    case 'sparkle':
+                        ctx.rotate(particle.rotation);
+                        ctx.fillStyle = particle.color;
+                        ctx.fillRect(-particle.size/2, -particle.size/2, particle.size, particle.size);
+                        break;
+                        
+                    case 'firework':
+                        ctx.rotate(particle.rotation);
+                        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, particle.size);
+                        gradient.addColorStop(0, particle.color);
+                        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, particle.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                }
+                
+                ctx.restore();
+            });
+        }
+        
+        function drawSecrets() {
+            secrets.forEach(secret => {
+                if (!secret.discovered) {
+                    // Only show secret areas in debug mode or when hinted
+                    if (gameState.debugMode) {
+                        ctx.fillStyle = 'rgba(255, 0, 255, 0.3)';
+                        ctx.fillRect(secret.x, secret.y, secret.width, secret.height);
+                    }
+                }
+            });
+        }
+        
+        function updateUI() {
+            // Update score display with leading zeros
+            document.getElementById('score').textContent = String(gameState.score).padStart(6, '0');
+            document.getElementById('lives').textContent = gameState.lives;
+            document.getElementById('level').textContent = `${gameState.world}-${gameState.level}`;
+            document.getElementById('timer').textContent = gameState.timer;
+            document.getElementById('coinCount').textContent = gameState.coins;
+            
+            // Update power-up status
+            let powerText = '';
+            switch (gameState.powerUp) {
+                case 'small': powerText = 'SMALL'; break;
+                case 'big': powerText = 'BIG'; break;
+                case 'fire': powerText = 'FIRE'; break;
+            }
+            document.getElementById('powerStatus').textContent = powerText;
+            
+            // Update special ability display
+            let abilityText = '';
+            if (gameState.invincible) abilityText = 'STAR POWER!';
+            else if (gameState.powerUp === 'fire') abilityText = 'PRESS X TO SHOOT';
+            document.getElementById('specialAbility').textContent = abilityText;
+            
+            // Flash timer when low
+            if (gameState.timer < 100 && Math.floor(Date.now() / 200) % 2 === 0) {
+                document.getElementById('timer').style.color = '#FF0000';
+            } else {
+                document.getElementById('timer').style.color = '#FFFFFF';
+            }
+        }
+        
+        function drawOverlays() {
+            if (gameState.paused) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '24px "Press Start 2P"';
+                ctx.textAlign = 'center';
+                ctx.fillText('PAUSED', canvas.width/2, canvas.height/2);
+                ctx.font = '12px "Press Start 2P"';
+                ctx.fillText('Press P to resume', canvas.width/2, canvas.height/2 + 30);
+            }
+            
+            if (!gameState.gameRunning && gameState.lives <= 0) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#FF0000';
+                ctx.font = '28px "Press Start 2P"';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 30);
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '16px "Press Start 2P"';
+                ctx.fillText(`FINAL SCORE: ${gameState.score}`, canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText('Press F5 to restart', canvas.width/2, canvas.height/2 + 60);
+            }
+        }
+        
+        // Main game loop
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Start the game
+        gameLoop();
+        
+        // Debug mode toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyD') {
+                gameState.debugMode = !gameState.debugMode;
+            }
+        });
+    </script>
 </body>
 </html>
